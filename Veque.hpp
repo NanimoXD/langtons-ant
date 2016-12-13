@@ -1,11 +1,11 @@
-#ifndef Vecque_hpp
-#define Vecque_hpp
+#ifndef Veque_hpp
+#define Veque_hpp
 
 #define alocsize 10
 
 namespace jk
 {
-    class Vecque
+    class Veque
     {
         int num;                                // Ilość elementów ;P
 
@@ -16,7 +16,7 @@ namespace jk
                                                 // więc nie mogą zostać usuniête bez wiedzy wektora :p
 
     public:
-        Vecque():num(0), aloc(0),               // Konstruktor ;)
+        Veque():num(0), aloc(0),               // Konstruktor ;)
         sprite(nullptr){};
 
         void reserve(int _num);                 // Rezerwuje miejsce domyślnie 10 (do zmiany w define)
@@ -62,7 +62,7 @@ namespace jk
         // Funkcja  pop_back    erase()
     };
 
-    void Vecque::reserve(int _num = alocsize)
+    void Veque::reserve(int _num = alocsize)
     {
         if(_num <= 0) return;
 
@@ -78,14 +78,16 @@ namespace jk
 
         delete[] sprite;
         sprite = qubby;
+
+        delete qubby;
     }
 
-    int Vecque::capacity()
+    int Veque::capacity()
     {
         return aloc - num;
     }
 
-    void Vecque::move(int what, int where = -1)
+    void Veque::move(int what, int where = -1)
     {
         if(where < -1||
            where >  aloc - 1||
@@ -106,7 +108,7 @@ namespace jk
         sprite[where] = qubby;
     }
 
-    void Vecque::push(sf::Sprite *_sprite = new sf::Sprite, int to = -1)
+    void Veque::push(sf::Sprite *_sprite = new sf::Sprite, int to = -1)
     {
         if(aloc - num == 0) reserve();
 
@@ -118,12 +120,12 @@ namespace jk
             move(num - 1, to);
     }
 
-    int Vecque::size()
+    int Veque::size()
     {
         return num;
     }
 
-    sf::Sprite *Vecque::get(int _num = -1)
+    sf::Sprite *Veque::get(int _num = -1)
     {
         if(_num < -1 || _num > aloc - 1)
             return nullptr;
@@ -133,7 +135,7 @@ namespace jk
             return sprite[_num];
     }
 
-    void Vecque::copy(int what = -1, int where = -1)
+    void Veque::copy(int what = -1, int where = -1)
     {
         if(where < -1 || where >  aloc - 1 ||
            what < -1 || what >  aloc - 1) return;
@@ -145,7 +147,7 @@ namespace jk
         push(qubby, where);
     }
 
-    /*void Vecque::erase(int from, int _num = 1)
+    /*void Veque::erase(int from, int _num = 1)
     {
         if(from < 0 || _num < 1 || from + _num > aloc) return;
 
@@ -175,7 +177,7 @@ namespace jk
             sprite[i] = qubby[i + _num];
     }*/
 
-    void Vecque::clear()
+    void Veque::clear()
     {
         for(int i = 0; i < num; ++i)
         {
@@ -189,7 +191,7 @@ namespace jk
         aloc = 0;
     }
 
-    void Vecque::draw(sf::RenderWindow &window)
+    void Veque::draw(sf::RenderWindow &window)
     {
         for(int i = 0; i < num; ++i)
             window.draw(*sprite[i]);
@@ -198,7 +200,7 @@ namespace jk
 
 #undef alokacja
 
-#endif // Vecque_hpp
+#endif // Veque_hpp
 
 
 

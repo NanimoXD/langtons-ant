@@ -7,14 +7,13 @@
 #include <iostream>
 #include <sstream>
 
-#include "News.hpp"
-#include "Vecque.hpp"
+#include "Veque.hpp"
 #include "Button.hpp"
 
 
 int main()
 {
-    jk::Vecque qwer;
+    jk::Veque qwer;
 
     sf::RenderWindow window;
 
