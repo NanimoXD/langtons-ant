@@ -13,14 +13,21 @@
 
 int main()
 {
-    jk::Veque qwer;
+    sf::Vector2f winSize(sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 1.5);
 
     sf::RenderWindow window;
+    window.create(sf::VideoMode(winSize.x, winSize.y, sf::VideoMode::getDesktopMode().bitsPerPixel), "Cosik Fajnego", sf::Style::Close);
+    window.clear(sf::Color::Black);
+    window.display();
 
-    sf::Vector2f winSize(sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 1.5);
+    sf::Image icon;
+    if(icon.loadFromFile("Images/icon.png"))
+        window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     sf::Texture bgTexture;
     bgTexture.loadFromFile("Images/background.jpg");
+
+    jk::Veque qwer;
 
     qwer.push();
     qwer.get()->setTexture(bgTexture);
@@ -31,14 +38,6 @@ int main()
         qwer.copy();
         qwer.get()->setPosition(winSize.x / 58 * i, winSize.y / 58 * i);
     }
-
-    window.create(sf::VideoMode(winSize.x, winSize.y, sf::VideoMode::getDesktopMode().bitsPerPixel), "Cosik Fajnego", sf::Style::Close);
-    window.clear(sf::Color::Black);
-    window.display();
-
-    sf::Image icon;
-    if(icon.loadFromFile("Images/icon.png"))
-        window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     int lol = 0;
 
@@ -54,7 +53,7 @@ int main()
             }
         }
 
-        // Takie ma≥e coú a tyle radoúci XDD
+        // Takie ma¬≥e co≈ì a tyle rado≈ìci XDD
 
         qwer.move(29, lol);
         if(lol < 29) ++lol;
