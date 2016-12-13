@@ -14,6 +14,9 @@ namespace jk
     };
 
     Button::Button(sf::RenderWindow &window, sf::Vector2f pos, sf::Vector2f size, std::string str)
+    {
+
+    }
 }
 
 #endif // Button_hpp

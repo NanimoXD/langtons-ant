@@ -36,7 +36,9 @@ namespace jk
                 window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
         }
 
+        window.clear(sf::Color::Black);
         display();
+        window.display();
 
         sf::Event event;
         while(window.pollEvent(event)){events(event);}

@@ -56,11 +56,7 @@ void jk::MainWin::events(sf::Event &event)
 
 void jk::MainWin::display()
 {
-    window.clear(sf::Color::Black);
-
     sprites.draw(window);
-
-    window.display();
 }
 
 
