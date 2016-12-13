@@ -19,8 +19,6 @@ int main()
 
     sf::Vector2f winSize(sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 1.5);
 
-
-
     sf::Texture bgTexture;
     bgTexture.loadFromFile("Images/background.jpg");
 
@@ -35,10 +33,7 @@ int main()
     }
 
     window.create(sf::VideoMode(winSize.x, winSize.y, sf::VideoMode::getDesktopMode().bitsPerPixel), "Cosik Fajnego", sf::Style::Close);
-    window.setVerticalSyncEnabled(true);
-    window.setFramerateLimit(60);
     window.clear(sf::Color::Black);
-    qwer.draw(window);
     window.display();
 
     sf::Image icon;
@@ -76,9 +71,6 @@ int main()
 
     return EXIT_SUCCESS;
 }
-
-
-
 
 
 

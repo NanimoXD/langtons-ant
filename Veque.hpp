@@ -78,8 +78,6 @@ namespace jk
 
         delete[] sprite;
         sprite = qubby;
-
-        delete qubby;
     }
 
     int Veque::capacity()
