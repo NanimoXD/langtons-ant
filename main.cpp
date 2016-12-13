@@ -9,66 +9,58 @@
 
 #include "Veque.hpp"
 #include "Button.hpp"
-
+#include "mainWin.hpp"
 
 int main()
 {
-    sf::Vector2f winSize(sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 1.5);
+    jk::MainWin mainWin;
 
-    sf::RenderWindow window;
-    window.create(sf::VideoMode(winSize.x, winSize.y, sf::VideoMode::getDesktopMode().bitsPerPixel), "Cosik Fajnego", sf::Style::Close);
-    window.clear(sf::Color::Black);
-    window.display();
-
-    sf::Image icon;
-    if(icon.loadFromFile("Images/icon.png"))
-        window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-
-    sf::Texture bgTexture;
-    bgTexture.loadFromFile("Images/background.jpg");
-
-    jk::Veque qwer;
-
-    qwer.push();
-    qwer.get()->setTexture(bgTexture);
-    qwer.get()->setScale(winSize.x / bgTexture.getSize().x / 2, winSize.y / bgTexture.getSize().y / 2);
-
-    for(int i = 1; i < 30; ++i)
+    sf::Texture mainBg;
+    if(mainBg.loadFromFile("Images/background.jpg"))
     {
-        qwer.copy();
-        qwer.get()->setPosition(winSize.x / 58 * i, winSize.y / 58 * i);
+        mainWin.sprites.push();
+        mainWin.sprites.get()->setTexture(mainBg);
+        mainWin.sprites.get()->setScale(mainWin.winSize.x / mainBg.getSize().x / 2, mainWin.winSize.y / mainBg.getSize().y / 2);
+
+        for(int i = 1; i < 30; ++i)
+        {
+            mainWin.sprites.copy();
+            mainWin.sprites.get()->setPosition(mainWin.winSize.x / 58 * i, mainWin.winSize.y / 58 * i);
+        }
     }
 
     int lol = 0;
 
-    while(window.isOpen())
+    while(mainWin.start())
     {
-        sf::Event event;
-        while(window.pollEvent(event))
-        {
-            if(event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
-            {
-                window.close();
-                return EXIT_SUCCESS;
-            }
-        }
-
         // Takie małe coś a tyle radości XDD
 
-        qwer.move(29, lol);
+        mainWin.sprites.move(29, lol);
         if(lol < 29) ++lol;
         else lol = 0;
 
         // No lol XD
-
-        window.clear(sf::Color::Black);
-
-        qwer.draw(window);
-
-        window.display();
     }
 
     return EXIT_SUCCESS;
+}
+
+void jk::MainWin::events(sf::Event &event)
+{
+    if(event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
+    {
+        window.close();
+        return;
+    }
+}
+
+void jk::MainWin::display()
+{
+    window.clear(sf::Color::Black);
+
+    sprites.draw(window);
+
+    window.display();
 }
 
 

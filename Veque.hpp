@@ -16,7 +16,7 @@ namespace jk
                                                 // więc nie mogą zostać usuniête bez wiedzy wektora :p
 
     public:
-        Veque():num(0), aloc(0),               // Konstruktor ;)
+        Veque():num(0), aloc(0),                // Konstruktor ;)
         sprite(nullptr){};
 
         void reserve(int _num);                 // Rezerwuje miejsce domyślnie 10 (do zmiany w define)
@@ -145,8 +145,9 @@ namespace jk
         push(qubby, where);
     }
 
-    /*void Veque::erase(int from, int _num = 1)
+    /*void Veque::erase(int from = -1, int _num = 1)
     {
+        if(from == -1) from = num - 1;
         if(from < 0 || _num < 1 || from + _num > aloc) return;
 
         for(int i = from; i < _num + from; ++i)
