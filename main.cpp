@@ -53,7 +53,7 @@ int main()
             }
         }
 
-        // Takie ma³e coœ a tyle radoœci XDD
+        // Takie małe coś a tyle radości XDD
 
         qwer.move(29, lol);
         if(lol < 29) ++lol;
