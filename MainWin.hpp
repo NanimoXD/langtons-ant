@@ -27,6 +27,7 @@ namespace jk
         if(!window.isOpen())
         {
             window.create(sf::VideoMode(winSize.x, winSize.y, sf::VideoMode::getDesktopMode().bitsPerPixel), "Ant XD", sf::Style::Close);
+            window.setFramerateLimit(60);
             window.clear(sf::Color::Black);
             window.display();
 

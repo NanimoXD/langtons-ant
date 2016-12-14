@@ -15,7 +15,7 @@ int main()
 {
     jk::MainWin mainWin;
 
-    const short number = 30;
+    const short number = 50;
 
     sf::Texture mainBg;
     if(mainBg.loadFromFile("Images/background.jpg"))
