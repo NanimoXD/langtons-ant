@@ -9,7 +9,7 @@
 
 #include "Veque.hpp"
 #include "Button.hpp"
-#include "mainWin.hpp"
+#include "MainWin.hpp"
 
 int main()
 {
@@ -30,14 +30,16 @@ int main()
     }
 
     int lol = 0;
+    bool XD = true;
 
     while(mainWin.start())
     {
         // Takie małe coś a tyle radości XDD
 
         mainWin.sprites.move(29, lol);
-        if(lol < 29) ++lol;
-        else lol = 0;
+        if(lol < 29 && XD) ++lol;
+        else if(lol > 0 && !XD) --lol;
+        else XD = !XD;
 
         // No lol XD
     }
