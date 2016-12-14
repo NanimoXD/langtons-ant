@@ -6,7 +6,6 @@ namespace jk
     class MainWin
     {
         void events(sf::Event &event);
-        void display();
 
     public:
         MainWin(sf::Vector2f winScale);
@@ -37,7 +36,7 @@ namespace jk
         }
 
         window.clear(sf::Color::Black);
-        display();
+        sprites.draw(window);
         window.display();
 
         sf::Event event;

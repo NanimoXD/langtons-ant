@@ -15,6 +15,8 @@ int main()
 {
     jk::MainWin mainWin;
 
+    const short number = 30;
+
     sf::Texture mainBg;
     if(mainBg.loadFromFile("Images/background.jpg"))
     {
@@ -22,10 +24,10 @@ int main()
         mainWin.sprites.get()->setTexture(mainBg);
         mainWin.sprites.get()->setScale(mainWin.winSize.x / mainBg.getSize().x / 2, mainWin.winSize.y / mainBg.getSize().y / 2);
 
-        for(int i = 1; i < 30; ++i)
+        for(int i = 1; i < number; ++i)
         {
             mainWin.sprites.copy();
-            mainWin.sprites.get()->setPosition(mainWin.winSize.x / 58 * i, mainWin.winSize.y / 58 * i);
+            mainWin.sprites.get()->setPosition(mainWin.winSize.x / ((number - 1) * 2) * i, mainWin.winSize.y / ((number - 1) * 2) * i);
         }
     }
 
@@ -36,9 +38,17 @@ int main()
     {
         // Takie małe coś a tyle radości XDD
 
-        mainWin.sprites.move(29, lol);
-        if(lol < 29 && XD) ++lol;
-        else if(lol > 0 && !XD) --lol;
+        if(lol < number * 2 - 1 && XD)
+        {
+            mainWin.sprites.move(number - 1, lol % number);
+            ++lol;
+        }
+        else if(lol > 0 && !XD)
+        {
+            if(lol == number * 2 - 1) lol = number - 1;
+            mainWin.sprites.move(0, lol);
+            --lol;
+        }
         else XD = !XD;
 
         // No lol XD
@@ -56,10 +66,7 @@ void jk::MainWin::events(sf::Event &event)
     }
 }
 
-void jk::MainWin::display()
-{
-    sprites.draw(window);
-}
+
 
 
 

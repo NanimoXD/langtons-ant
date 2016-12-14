@@ -87,10 +87,10 @@ namespace jk
 
     void Veque::move(int what, int where = -1)
     {
-        if(where < -1||
-           where >  aloc - 1||
+        if(where < -1 ||
+           where >  aloc - 1 ||
            what < -1 ||
-           what >  aloc - 1||
+           what >  aloc - 1 ||
            what == where) return;
 
         if(where == -1) where = num - 1;
