@@ -3,8 +3,14 @@
 
 namespace jk
 {
-    class MainWin
+    class MainWin:
+        public Veque
     {
+        sf::Time time;
+        sf::Clock clo;
+
+        sf::RenderWindow window;
+
         void events(sf::Event &event);
 
     public:
@@ -12,22 +18,23 @@ namespace jk
 
         const sf::Vector2f winSize;
 
-        sf::RenderWindow window;
-
-        jk::Veque sprites;
-
         bool start();
+
+        sf::Time clock();
     };
 
     MainWin::MainWin(sf::Vector2f winScale = sf::Vector2f(2, 1.5)):
-        winSize     (sf::VideoMode::getDesktopMode().width / winScale.x, sf::VideoMode::getDesktopMode().height / winScale.y){}
+        Veque       (),
+        winSize     (sf::VideoMode::getDesktopMode().width / winScale.x, sf::VideoMode::getDesktopMode().height / winScale.y)
+    {
+        clo.restart();
+    }
 
     bool MainWin::start()
     {
         if(!window.isOpen())
         {
             window.create(sf::VideoMode(winSize.x, winSize.y, sf::VideoMode::getDesktopMode().bitsPerPixel), "Ant XD", sf::Style::Close);
-            window.setFramerateLimit(60);
             window.clear(sf::Color::Black);
             window.display();
 
@@ -36,14 +43,22 @@ namespace jk
                 window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
         }
 
+        time = clo.getElapsedTime();
+        clo.restart();
+
         window.clear(sf::Color::Black);
-        sprites.draw(window);
+        draw(window);
         window.display();
 
         sf::Event event;
         while(window.pollEvent(event)){events(event);}
 
         return window.isOpen();
+    }
+
+    sf::Time MainWin::clock()
+    {
+        return time;
     }
 }
 

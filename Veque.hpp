@@ -7,48 +7,50 @@ namespace jk
 {
     class Veque
     {
-        int num;                                // Ilość elementów ;P
+        int num;                                    // Ilość elementów ;P
 
-        int aloc;                               // Ilość zarezerwowanego miejsca
+        int aloc;                                   // Ilość zarezerwowanego miejsca
 
-    private:
-        sf::Sprite **sprite;                    // Funkcja pobiera wskaźniki na elementy,
-                                                // więc nie mogą zostać usuniête bez wiedzy wektora :p
+    protected:
+        sf::Sprite **sprite;                        // Funkcja pobiera wskaźniki na elementy,
+                                                    // więc nie mogą zostać usuniête bez wiedzy wektora :p
 
     public:
-        Veque():num(0), aloc(0),                // Konstruktor ;)
-        sprite(nullptr){};
+        Veque():num(0), aloc(0),                    // Konstruktor ;)
+        sprite(nullptr){}
 
-        void reserve(int _num);                 // Rezerwuje miejsce domyślnie 10 (do zmiany w define)
+        ~Veque(){clear();}                          // Destruktor ;(
 
-        int capacity();                         // Zwraca ilość elementów które można jeszcze dodać
-                                                // bez ponownej alokacji pamięci
+        void reserve(int _num);                     // Rezerwuje miejsce domyślnie 10 (do zmiany w define)
 
-        void move(int what, int where);         // Przenosi element z jednego miejsca w drugie
-                                                // Domyślnie na koniec
+        int capacity();                             // Zwraca ilość elementów które można jeszcze dodać
+                                                    // bez ponownej alokacji pamięci
 
-        void push(sf::Sprite *_sprite, int to); // Dodawanie nowego obiektu, obie opcje opcjonalnie,
-                                                // Domyślnie na koniec
-                                                // Ogólnie push_back i insert w jednym :p
+        void move(int what, int where, int _num);   // Przenosi _num elementów z jednego miejsca w drugie
+                                                    // Domyślnie na koniec i domyślnie 1
 
-        int size();                             // Zwraca ilość elementów w tablicy
+        void push(sf::Sprite *_sprite, int to);     // Dodawanie nowego obiektu, obie opcje opcjonalnie,
+                                                    // Domyślnie na koniec
+                                                    // Ogólnie push_back i insert w jednym :p
 
-        sf::Sprite *get(int _num);              // Zwraca wskaźnik na obiekt o podanym numerze od 0 do size()
-                                                // Domyślnie końcowy
+        int size();                                 // Zwraca ilość elementów w tablicy
 
-        void copy(int what, int where);         // Kopiuje element do wybranego miejsca
-                                                // Domyślnie na koniec
+        sf::Sprite *get(int _num);                  // Zwraca wskaźnik na obiekt o podanym numerze od 0 do size()
+                                                    // Domyślnie końcowy
 
-        //void erase(int from, int _num);         // Usuwa _num wartości zaczynając od from włącznie,
-                                                // jeśli sie da usuwa także objekt,
-                                                // zsuwa elementy położone wyżej
-                                                // obie wartości opcjonalnie,
-                                                // wtedy usuwa tylko jeden element od końca
+        void copy(int what, int where);             // Kopiuje element do wybranego miejsca
+                                                    // Domyślnie na koniec
 
-        void clear();                           // Usuwa elementy i Czyści tablicę
+        void erase(int from, int _num);             // Usuwa _num wartości zaczynając od from włącznie,
+                                                    // jeśli sie da usuwa także objekt,
+                                                    // zsuwa elementy położone wyżej
+                                                    // obie wartości opcjonalnie,
+                                                    // wtedy usuwa tylko jeden element od końca
 
-        void draw(sf::RenderWindow &window);    // I wreszcie metoda dla której to wszystko robie XD
-                                                // Rysuje wszystkie sprajty od 0 do size()
+        void clear();                               // Usuwa elementy i Czyści tablicę
+
+        void draw(sf::RenderWindow &window);        // I wreszcie metoda dla której to wszystko robie XD
+                                                    // Rysuje wszystkie sprajty od 0 do size()
 
         // Opis do reszty pierdół których nie ma :p
 
@@ -68,13 +70,7 @@ namespace jk
 
         aloc += _num;
 
-        sf::Sprite **qubby = new sf::Sprite*[aloc];
-
-        for(int i = 0; i < num; ++i)
-            qubby[i] = sprite[i];
-
-        for(int i = 1; i <= _num; ++i)
-            qubby[aloc - i] = nullptr;
+        sf::Sprite **qubby = (sf::Sprite**)memcpy(new sf::Sprite*[aloc], sprite, num * sizeof(sf::Sprite*));
 
         delete[] sprite;
         sprite = qubby;
@@ -85,25 +81,27 @@ namespace jk
         return aloc - num;
     }
 
-    void Veque::move(int what, int where = -1)
+    void Veque::move(int what, int where = -1, int _num = 1)
     {
         if(where < -1 ||
-           where >  aloc - 1 ||
+           where >  num - 1 ||
            what < -1 ||
-           what >  aloc - 1 ||
+           _num < 1 ||
+           what + _num > num ||
            what == where) return;
 
         if(where == -1) where = num - 1;
 
-        sf::Sprite *qubby = sprite[what];
+        sf::Sprite **qubby = (sf::Sprite**)memcpy(new sf::Sprite*[_num], sprite + what, _num * sizeof(sf::Sprite*));
 
-        for(; what < where; ++what)
-            sprite[what] = sprite[what + 1];
+        if(what < where)
+            memmove(sprite + what, sprite + what + _num, (where - what) * sizeof(sf::Sprite*));
+        else
+            memmove(sprite + where + _num, sprite + where, (what - where) * sizeof(sf::Sprite*));
 
-        for(; what > where; --what)
-            sprite[what] = sprite[what - 1];
+        memcpy(sprite + where, qubby, _num * sizeof(sf::Sprite*));
 
-        sprite[where] = qubby;
+        delete[] qubby;
     }
 
     void Veque::push(sf::Sprite *_sprite = new sf::Sprite, int to = -1)
@@ -145,7 +143,7 @@ namespace jk
         push(qubby, where);
     }
 
-    /*void Veque::erase(int from = -1, int _num = 1)
+    void Veque::erase(int from = -1, int _num = 1)
     {
         if(from == -1) from = num - 1;
         if(from < 0 || _num < 1 || from + _num > aloc) return;
@@ -174,7 +172,7 @@ namespace jk
 
         for(int i = from; i < num; ++i)
             sprite[i] = qubby[i + _num];
-    }*/
+    }
 
     void Veque::clear()
     {

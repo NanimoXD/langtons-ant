@@ -5,7 +5,7 @@
 #include <SFML/Network.hpp>
 
 #include <iostream>
-#include <sstream>
+#include <cstring>
 
 #include "Veque.hpp"
 #include "Button.hpp"
@@ -20,38 +20,47 @@ int main()
     sf::Texture mainBg;
     if(mainBg.loadFromFile("Images/background.jpg"))
     {
-        mainWin.sprites.push();
-        mainWin.sprites.get()->setTexture(mainBg);
-        mainWin.sprites.get()->setScale(mainWin.winSize.x / mainBg.getSize().x / 2, mainWin.winSize.y / mainBg.getSize().y / 2);
+        mainWin.reserve(number);
+
+        mainWin.push();
+        mainWin.get()->setTexture(mainBg);
+        mainWin.get()->setScale(mainWin.winSize.x / mainBg.getSize().x / 2, mainWin.winSize.y / mainBg.getSize().y / 2);
 
         for(int i = 1; i < number; ++i)
         {
-            mainWin.sprites.copy();
-            mainWin.sprites.get()->setPosition(mainWin.winSize.x / ((number - 1) * 2) * i, mainWin.winSize.y / ((number - 1) * 2) * i);
+            mainWin.copy();
+            mainWin.get()->setPosition(mainWin.winSize.x / ((number - 1) * 2) * i, mainWin.winSize.y / ((number - 1) * 2) * i);
         }
     }
 
     int lol = 0;
     bool XD = true;
 
+    sf::Time time = sf::seconds(0);
+
     while(mainWin.start())
     {
-        // Takie małe coś a tyle radości XDD
+        time += mainWin.clock();
 
-        if(lol < number * 2 - 1 && XD)
+        for(; time > sf::milliseconds(1000 / number); time -= sf::milliseconds(1000 / number))
         {
-            mainWin.sprites.move(number - 1, lol % number);
-            ++lol;
-        }
-        else if(lol > 0 && !XD)
-        {
-            if(lol == number * 2 - 1) lol = number - 1;
-            mainWin.sprites.move(0, lol);
-            --lol;
-        }
-        else XD = !XD;
+            // Takie małe coś a tyle radości XDD
 
-        // No lol XD
+            if(lol < number * 2 - 1 && XD)
+            {
+                mainWin.move(number - 1, lol % number);
+                ++lol;
+            }
+            else if(lol > 0 && !XD)
+            {
+                if(lol == number * 2 - 1) lol = number - 1;
+                mainWin.move(0, lol);
+                --lol;
+            }
+            else XD = !XD;
+
+            // No lol XD
+        }
     }
 
     return EXIT_SUCCESS;
