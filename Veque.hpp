@@ -148,30 +148,12 @@ namespace jk
         if(from == -1) from = num - 1;
         if(from < 0 || _num < 1 || from + _num > aloc) return;
 
+        return;
+
         for(int i = from; i < _num + from; ++i)
             delete sprite[i];
 
-        sf::Sprite **qubby = sprite;
-        delete[] sprite;
-        sprite = nullptr;
 
-        if(from + _num > num)
-            num += from + _num - num;
-
-        int alocc = aloc - _num,
-            numm = num - _num;
-        num = 0;
-        aloc = 0;
-
-        reserve(alocc);
-
-        num = numm;
-
-        for(int i = 0; i < from; ++i)
-            sprite[i] = qubby[i];
-
-        for(int i = from; i < num; ++i)
-            sprite[i] = qubby[i + _num];
     }
 
     void Veque::clear()

@@ -15,11 +15,11 @@ int main()
 {
     jk::MainWin mainWin;
 
-    const short number = 50;
-
     sf::Texture mainBg;
     if(mainBg.loadFromFile("Images/background.jpg"))
     {
+        const int number = 75;
+
         mainWin.reserve(number);
 
         mainWin.push();
@@ -42,18 +42,18 @@ int main()
     {
         time += mainWin.clock();
 
-        for(; time > sf::milliseconds(1000 / number); time -= sf::milliseconds(1000 / number))
+        for(; time > sf::milliseconds(1000 / mainWin.size()); time -= sf::milliseconds(1000 / mainWin.size()))
         {
             // Takie małe coś a tyle radości XDD
 
-            if(lol < number * 2 - 1 && XD)
+            if(lol < mainWin.size() * 2 - 1 && XD)
             {
-                mainWin.move(number - 1, lol % number);
+                mainWin.move(mainWin.size() - 1, lol % mainWin.size());
                 ++lol;
             }
             else if(lol > 0 && !XD)
             {
-                if(lol == number * 2 - 1) lol = number - 1;
+                if(lol == mainWin.size() * 2 - 1) lol = mainWin.size() - 1;
                 mainWin.move(0, lol);
                 --lol;
             }
