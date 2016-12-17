@@ -153,7 +153,21 @@ namespace jk
         for(int i = from; i < _num + from; ++i)
             delete sprite[i];
 
+        if(from + _num > num)
+            num -= from + _num - num;
+        else
+            num -= _num;
 
+        aloc -= _num;
+
+        sf::Sprite **qubby = (sf::Sprite**)memcpy(new sf::Sprite*[aloc], sprite, (from - 1) * sizeof(sf::Sprite*));
+        memcpy(qubby + from, sprite + from + _num, (aloc - from) * sizeof(sf::Sprite*));
+
+        delete[] sprite;
+
+        sprite = qubby;
+
+        sf::sleep(sf::seconds(5));
     }
 
     void Veque::clear()

@@ -18,48 +18,43 @@ int main()
     sf::Texture mainBg;
     if(mainBg.loadFromFile("Images/background.jpg"))
     {
-        const int number = 75;
+        const int mapx = 100;
+        const int mapy = 100;
 
-        mainWin.reserve(number);
+        mainWin.reserve(mapx * mapy);
 
         mainWin.push();
         mainWin.get()->setTexture(mainBg);
-        mainWin.get()->setScale(mainWin.winSize.x / mainBg.getSize().x / 2, mainWin.winSize.y / mainBg.getSize().y / 2);
+        mainWin.get()->setScale(mainWin.winSize.x / mainBg.getSize().x / mapx, mainWin.winSize.y / mainBg.getSize().y / mapy);
 
-        for(int i = 1; i < number; ++i)
+        for(int i = 0; i < mapx; ++i)
         {
-            mainWin.copy();
-            mainWin.get()->setPosition(mainWin.winSize.x / ((number - 1) * 2) * i, mainWin.winSize.y / ((number - 1) * 2) * i);
+            for(int j = 0; j < mapy; ++j)
+            {
+                mainWin.copy();
+                mainWin.get()->setPosition(i * mainWin.get()->getScale().x * mainBg.getSize().x, j * mainWin.get()->getScale().y * mainBg.getSize().y);
+                mainWin.copy();
+                mainWin.get()->setColor(sf::Color(0, 0, 128));
+            }
         }
     }
 
-    int lol = 0;
-    bool XD = true;
-
-    sf::Time time = sf::seconds(0);
+    int fps = 0;
+    sf::Time second = sf::seconds(0);
 
     while(mainWin.start())
     {
-        time += mainWin.clock();
+        ++fps;
 
-        for(; time > sf::milliseconds(1000 / mainWin.size()); time -= sf::milliseconds(1000 / mainWin.size()))
+        second += mainWin.clock();
+        if(second > sf::seconds(1))
         {
-            // Takie małe coś a tyle radości XDD
+            second -= sf::seconds(1);
 
-            if(lol < mainWin.size() * 2 - 1 && XD)
-            {
-                mainWin.move(mainWin.size() - 1, lol % mainWin.size());
-                ++lol;
-            }
-            else if(lol > 0 && !XD)
-            {
-                if(lol == mainWin.size() * 2 - 1) lol = mainWin.size() - 1;
-                mainWin.move(0, lol);
-                --lol;
-            }
-            else XD = !XD;
+            mainWin.get(0)->setColor(sf::Color(255, 0, 0));
 
-            // No lol XD
+            printf("%i\n", fps);
+            fps = 0;
         }
     }
 
