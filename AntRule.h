@@ -9,6 +9,7 @@
 #include <vector>
 #include <utility>
 
+typedef unsigned int uint;
 
 /* Paleta to nic innego jak lista kolorów */
 
@@ -63,7 +64,7 @@ public:
      * - każdy kierunek ma przypisany kolor; kolory mogą się powtarzać, nie są sprawdzane
      * - przekazanie pustej palety w argumencie spowoduje użycie domyślnej palety symulacji (AntRulePalette::defaultPalette())
      * - metody i konstruktor przyjmują na wejściu również małe znaki, tzn. 'r', 'l', ale dane zwracane zawsze mają postać typu "RL"
-     * - jeżeli metoda przyjmuje listę, oczekuje się, że wszystkie[1] kierunki są obsługiwane, a ciągi tesktowe poprawne (np. "RR1" jest błędne)
+     * - jeżeli metoda przyjmuje listę, oczekuje się, że wszystkie[1] kierunki są obsługiwane, a ciągi tekstowe poprawne (np. "RR1" jest błędne)
      *  [1] tzn. tyle kierunków musi być obsługiwanych ile wynosi rozmiar palety
      * - faktyczna ilość reguł jest najmniejszą liczbą z ilości kierunków i długości palety
      */

@@ -13,13 +13,13 @@
 
 int main()
 {
-    jk::MainWin mainWin;
+    MainWin mainWin;
 
     sf::Texture mainBg;
     if(mainBg.loadFromFile("Images/background.jpg"))
     {
-        const int mapx = 100;
-        const int mapy = 100;
+        const int mapx = 101;
+        const int mapy = 101;
 
         mainWin.reserve(mapx * mapy);
 
@@ -33,14 +33,13 @@ int main()
             {
                 mainWin.copy();
                 mainWin.get()->setPosition(i * mainWin.get()->getScale().x * mainBg.getSize().x, j * mainWin.get()->getScale().y * mainBg.getSize().y);
-                mainWin.copy();
-                mainWin.get()->setColor(sf::Color(0, 0, 128));
             }
         }
     }
 
     int fps = 0;
     sf::Time second = sf::seconds(0);
+    bool qwer = true;
 
     while(mainWin.start())
     {
@@ -51,7 +50,13 @@ int main()
         {
             second -= sf::seconds(1);
 
-            mainWin.get(0)->setColor(sf::Color(255, 0, 0));
+            for(int i = qwer; i < mainWin.size(); i += 2)
+                mainWin.get(i)->setColor(sf::Color(0, 0, 255));
+
+            for(int i = !qwer; i < mainWin.size(); i += 2)
+                mainWin.get(i)->setColor(sf::Color(255, 255, 255));
+
+            qwer = !qwer;
 
             printf("%i\n", fps);
             fps = 0;
@@ -61,7 +66,7 @@ int main()
     return EXIT_SUCCESS;
 }
 
-void jk::MainWin::events(sf::Event &event)
+void MainWin::events(sf::Event &event)
 {
     if(event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
     {
