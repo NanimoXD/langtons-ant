@@ -1,6 +1,9 @@
 #ifndef MainWin_hpp
 #define MainWin_hpp
 
+#include <SFML/Config.hpp>
+
+
 class MainWin:
     public Veque
 {
@@ -38,9 +41,12 @@ bool MainWin::start()
         window.clear(sf::Color::Black);
         window.display();
 
+/* Przynajmniej do czasu naprawienia b??du #1168 (https://github.com/SFML/SFML/issues/1168) */
+#ifndef SFML_SYSTEM_LINUX
         sf::Image icon;
         if(icon.loadFromFile("Images/icon.png"))
             window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+#endif
     }
 
     time = clo.getElapsedTime();
