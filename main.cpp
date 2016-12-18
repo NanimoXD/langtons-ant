@@ -7,8 +7,6 @@
 #include <iostream>
 #include <cstring>
 
-#include "Veque.hpp"
-#include "Button.hpp"
 #include "MainWin.hpp"
 
 void createMap(MainWin &mainWin, sf::Texture &field)
@@ -26,14 +24,25 @@ void createMap(MainWin &mainWin, sf::Texture &field)
     mainWin.get()->setTexture(field);
     mainWin.get()->setScale(mainWin.winSize.x / field.getSize().x / mapx, mainWin.winSize.y / field.getSize().y / mapy);
 
-    for(int i = 0; i < mapx; ++i)
+    for(int i = 0; i < mapy; ++i)
     {
-        for(int j = 0; j < mapy; ++j)
+        for(int j = 0; j < mapx; ++j)
         {
             mainWin.copy();
-            mainWin.get()->setPosition(i * mainWin.get()->getScale().x * field.getSize().x, j * mainWin.get()->getScale().y * field.getSize().y);
+            mainWin.get()->setPosition(j * mainWin.get()->getScale().x * field.getSize().x, i * mainWin.get()->getScale().y * field.getSize().y);
         }
     }
+}
+
+void changeColorsXD(MainWin &mainWin, bool &qwer)
+{
+    for(int i = qwer; i < mainWin.size(); i += 2)
+        mainWin.get(i)->setColor(sf::Color(0, 255, 255));
+
+    for(int i = !qwer; i < mainWin.size(); i += 2)
+        mainWin.get(i)->setColor(sf::Color(0, 0, 255));
+
+    qwer = !qwer;
 }
 
 int main()
@@ -43,27 +52,27 @@ int main()
 
     createMap(mainWin, field);
 
-
     int fps = 0;
     sf::Time second = sf::seconds(0);
+    sf::Time milSec = sf::seconds(0);
     bool qwer = true;
+
+    changeColorsXD(mainWin, qwer);
 
     while(mainWin.start())
     {
         ++fps;
 
-        second += mainWin.clock();
-        if(second > sf::seconds(1))
+        for(milSec += mainWin.clock(); milSec > sf::milliseconds(10); milSec -= sf::milliseconds(10))
         {
-            second -= sf::seconds(1);
+            mainWin.erase(mainWin.size() * 0.25);
+            mainWin.erase(mainWin.size() * 0.5);
+            mainWin.erase(mainWin.size() * 0.75);
+        }
 
-            for(int i = qwer; i < mainWin.size(); i += 2)
-                mainWin.get(i)->setColor(sf::Color(0, 0, 255));
-
-            for(int i = !qwer; i < mainWin.size(); i += 2)
-                mainWin.get(i)->setColor(sf::Color(255, 0, 255));
-
-            qwer = !qwer;
+        for(second += mainWin.clock(); second > sf::seconds(1); second -= sf::seconds(1))
+        {
+            changeColorsXD(mainWin, qwer);
 
             printf("Fps: %i\n", fps);
             fps = 0;

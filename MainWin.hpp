@@ -1,14 +1,18 @@
 #ifndef MainWin_hpp
 #define MainWin_hpp
 
-#include <SFML/Config.hpp>
+#include "Veque.hpp"
+#include "Button.hpp"
 
+#include <SFML/Config.hpp>
 
 class MainWin:
     public Veque
 {
-    sf::Time time;                              // Przechowuje czas od ostatniego uruchomienia start()
-    sf::Clock clo;                              // Liczy czas od ostatniego uruchomienia start()
+    friend class Button;
+
+    sf::Time time;                              // Przechowuje czas od ostatniego wywołania start()
+    sf::Clock clo;                              // Liczy czas od ostatniego wywołania start()
 
     sf::RenderWindow window;                    // Okno :p
 
@@ -53,7 +57,9 @@ bool MainWin::start()
     clo.restart();
 
     window.clear(sf::Color::Black);
+
     draw(window);
+
     window.display();
 
     sf::Event event;

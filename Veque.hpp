@@ -146,8 +146,6 @@ void Veque::erase(int from = -1, int _num = 1)
     if(from == -1) from = num - 1;
     if(from < 0 || _num < 1 || from + _num > aloc) return;
 
-    return;
-
     for(int i = from; i < _num + from; ++i)
         delete sprite[i];
 
@@ -158,14 +156,13 @@ void Veque::erase(int from = -1, int _num = 1)
 
     aloc -= _num;
 
-    sf::Sprite **qubby = (sf::Sprite**)memcpy(new sf::Sprite*[aloc], sprite, (from - 1) * sizeof(sf::Sprite*));
+    sf::Sprite **qubby = (sf::Sprite**)memcpy(new sf::Sprite*[aloc], sprite, (from) * sizeof(sf::Sprite*));
+
     memcpy(qubby + from, sprite + from + _num, (aloc - from) * sizeof(sf::Sprite*));
 
     delete[] sprite;
 
     sprite = qubby;
-
-    sf::sleep(sf::seconds(5));
 }
 
 void Veque::clear()
