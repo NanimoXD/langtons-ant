@@ -26,12 +26,12 @@ void createMap(MainWin &mainWin, sf::Texture &field)
     mainWin.get()->setTexture(field);
     mainWin.get()->setScale(mainWin.winSize.x / field.getSize().x / mapx, mainWin.winSize.y / field.getSize().y / mapy);
 
-    for(int i = 0; i < mapy; ++i)
+    for(int i = 0; i < mapx; ++i)
     {
-        for(int j = 0; j < mapx; ++j)
+        for(int j = 0; j < mapy; ++j)
         {
             mainWin.copy();
-            mainWin.get()->setPosition(j * mainWin.get()->getScale().x * field.getSize().x, i * mainWin.get()->getScale().y * field.getSize().y);
+            mainWin.get()->setPosition(i * mainWin.get()->getScale().x * field.getSize().x, j * mainWin.get()->getScale().y * field.getSize().y);
         }
     }
 }
