@@ -11,31 +11,38 @@
 #include "Button.hpp"
 #include "MainWin.hpp"
 
+void createMap(MainWin &mainWin, sf::Texture &field)
+{
+    sf::Image ffield;
+    ffield.create(1, 1, sf::Color(255, 255, 255));
+    field.loadFromImage(ffield);
+
+    const int mapx = 101;
+    const int mapy = 101;
+
+    mainWin.reserve(mapx * mapy);
+
+    mainWin.push();
+    mainWin.get()->setTexture(field);
+    mainWin.get()->setScale(mainWin.winSize.x / field.getSize().x / mapx, mainWin.winSize.y / field.getSize().y / mapy);
+
+    for(int i = 0; i < mapx; ++i)
+    {
+        for(int j = 0; j < mapy; ++j)
+        {
+            mainWin.copy();
+            mainWin.get()->setPosition(i * mainWin.get()->getScale().x * field.getSize().x, j * mainWin.get()->getScale().y * field.getSize().y);
+        }
+    }
+}
+
 int main()
 {
     MainWin mainWin;
+    sf::Texture field;
 
-    sf::Texture mainBg;
-    if(mainBg.loadFromFile("Images/background.jpg"))
-    {
-        const int mapx = 101;
-        const int mapy = 101;
+    createMap(mainWin, field);
 
-        mainWin.reserve(mapx * mapy);
-
-        mainWin.push();
-        mainWin.get()->setTexture(mainBg);
-        mainWin.get()->setScale(mainWin.winSize.x / mainBg.getSize().x / mapx, mainWin.winSize.y / mainBg.getSize().y / mapy);
-
-        for(int i = 0; i < mapx; ++i)
-        {
-            for(int j = 0; j < mapy; ++j)
-            {
-                mainWin.copy();
-                mainWin.get()->setPosition(i * mainWin.get()->getScale().x * mainBg.getSize().x, j * mainWin.get()->getScale().y * mainBg.getSize().y);
-            }
-        }
-    }
 
     int fps = 0;
     sf::Time second = sf::seconds(0);
@@ -54,11 +61,11 @@ int main()
                 mainWin.get(i)->setColor(sf::Color(0, 0, 255));
 
             for(int i = !qwer; i < mainWin.size(); i += 2)
-                mainWin.get(i)->setColor(sf::Color(255, 255, 255));
+                mainWin.get(i)->setColor(sf::Color(255, 0, 255));
 
             qwer = !qwer;
 
-            printf("%i\n", fps);
+            printf("Fps: %i\n", fps);
             fps = 0;
         }
     }
