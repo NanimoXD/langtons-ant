@@ -12,15 +12,15 @@ class MainWin:
 
     sf::RenderWindow window;                    // Okno :p
 
-    void events(sf::Event &event);              // Metoda do eventów
+    void events(sf::Event &event);              // Metoda do eventÃ³w
 
 public:
-    MainWin(sf::Vector2f winScale);             // Konstruktor. winScale = skala okna wzglêdem ekranu
-                                                // Domyœlnie 0.5 i 0.75 bo czemu nie XD :p
+    MainWin(sf::Vector2f winScale);             // Konstruktor. winScale = skala okna wzglÄ™dem ekranu
+                                                // DomyÅ›lnie 0.5 i 0.75 bo czemu nie XD :p
 
-    const sf::Vector2f winSize;                 // Wielkoœæ okna w pixelach
+    const sf::Vector2f winSize;                 // WielkoÅ›Ä‡ okna w pixelach
 
-    bool start();                               // Metoda robi¹ca wszystko co trzeba
+    bool start();                               // Metoda robiÄ…ca wszystko co trzeba
 
     sf::Time clock();                           // Zwraca time
 };
@@ -41,7 +41,7 @@ bool MainWin::start()
         window.clear(sf::Color::Black);
         window.display();
 
-/* Przynajmniej do czasu naprawienia b??du #1168 (https://github.com/SFML/SFML/issues/1168) */
+/* Przynajmniej do czasu naprawienia bÅ‚Ä™du #1168 (https://github.com/SFML/SFML/issues/1168) */
 #ifndef SFML_SYSTEM_LINUX
         sf::Image icon;
         if(icon.loadFromFile("Images/icon.png"))
@@ -68,16 +68,3 @@ sf::Time MainWin::clock()
 }
 
 #endif // MainWin_hpp
-
-
-
-
-
-
-
-
-
-
-
-
-
