@@ -1,7 +1,7 @@
 #ifndef ANT_H
 #define ANT_H
 
-#include "Direction.h"
+#include "Direction.hpp"
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 

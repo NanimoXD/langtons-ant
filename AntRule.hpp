@@ -1,7 +1,7 @@
 #ifndef ANTRULE_H
 #define ANTRULE_H
 
-#include "Direction.h"
+#include "Direction.hpp"
 
 #include <SFML/Graphics/Color.hpp>
 

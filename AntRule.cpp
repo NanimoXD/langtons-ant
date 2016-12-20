@@ -1,4 +1,4 @@
-#include "AntRule.h"
+#include "AntRule.hpp"
 
 
 AntRulePalette::AntRulePalette()
