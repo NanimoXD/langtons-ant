@@ -3,6 +3,7 @@
 
 #include "Veque.hpp"
 #include "Button.hpp"
+#include "Ant.hpp"
 
 #include <SFML/Config.hpp>
 
@@ -59,6 +60,13 @@ bool MainWin::start()
     window.clear(sf::Color::Black);
 
     draw(window);
+
+    /* Taka sobie mrówka */
+    Ant a;
+    a.setPosition(200, 200);
+    a.setScale(0.2, 0.2);
+    a.rotate(Direction::Left);
+    window.draw(a);
 
     window.display();
 
