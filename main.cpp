@@ -34,17 +34,6 @@ void createMap(MainWin &mainWin, sf::Texture &field)
     }
 }
 
-void changeColorsXD(MainWin &mainWin, bool &qwer)
-{
-    for(int i = qwer; i < mainWin.size(); i += 2)
-        mainWin.get(i)->setColor(sf::Color(0, 255, 255));
-
-    for(int i = !qwer; i < mainWin.size(); i += 2)
-        mainWin.get(i)->setColor(sf::Color(0, 0, 255));
-
-    qwer = !qwer;
-}
-
 int main()
 {
     MainWin mainWin;
@@ -55,12 +44,18 @@ int main()
     int fps = 0;
     sf::Time second = sf::seconds(0);
     sf::Time milSec = sf::seconds(0);
-    bool qwer = true;
 
-    changeColorsXD(mainWin, qwer);
+    /* Taka sobie mrówka nie musi sie tworzyæ od nowa za ka¿dym razem :p */
+    Ant a;
+    a.setPosition(200, 200);
+    a.setScale(0.2, 0.2);
+    a.rotate(Direction::Left);
 
     while(mainWin.start())
     {
+        /* Taka sobie mrówka */
+        mainWin.drawSpr(a);
+
         ++fps;
 
         for(milSec += mainWin.clock(); milSec > sf::milliseconds(10); milSec -= sf::milliseconds(10))
@@ -72,8 +67,6 @@ int main()
 
         for(second += mainWin.clock(); second > sf::seconds(1); second -= sf::seconds(1))
         {
-            changeColorsXD(mainWin, qwer);
-
             printf("Fps: %i\n", fps);
             fps = 0;
         }

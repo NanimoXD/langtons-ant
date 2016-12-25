@@ -33,7 +33,7 @@ public:
     void applyTexture();
 
 private:
-    /* Wczytuje teksturę mrówki z pliki, jeżeli jeszcze nie załadowana */
+    /* Wczytuje teksturę mrówki z pliku, jeżeli jeszcze nie załadowana */
     void loadTexture();
 
     Direction direction;
