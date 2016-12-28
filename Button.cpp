@@ -2,7 +2,7 @@
 
 // Domyślne ścieżki do czcionki
 #define fontSource "font.ttf"
-#define reserveFontSource "C:/Windows/Fonts/Segoe UI.ttf"
+#define reserveFontSource "C:/Windows/Fonts/segoeui.ttf"
 
 // Domyślne ustawienia kolorów
 #define defaultColor sf::Color(128, 128, 128)
@@ -35,6 +35,18 @@ void Button::updateSprite()
     sprite.setPosition(position);
 }
 
+Button::Button():
+    textScale       (0.3),
+    position        (sf::Vector2f(1, 1)),
+    size            (sf::Vector2f(0, 0)),
+    hover           (false),
+    pressed         (false),
+    broken          (false),
+    window          (nullptr)
+{
+    constructor();
+}
+
 Button::Button(sf::RenderWindow &win, sf::Vector2f pos, sf::Vector2f siz, std::string str):
     textScale       (0.3),
     position        (pos),
@@ -62,18 +74,6 @@ Button::Button(sf::RenderWindow &win, float posx, float posy, float sizx, float 
 
 bool Button::button(sf::Event &event)
 {
-    if(texture.getSize() == sf::Vector2u())
-    {
-        sf::Image img;
-        img.create(1, 1, sf::Color(255, 255, 255));
-        texture.loadFromImage(img);
-        sprite.setTexture(texture);
-        updateSprite();
-    }
-
-    window->draw(sprite);
-    window->draw(text);
-
     if(event.type == sf::Event::MouseMoved)
     {
         if(event.mouseMove.x > position.x && event.mouseMove.x < position.x + size.x &&
@@ -93,19 +93,19 @@ bool Button::button(sf::Event &event)
             if(hover)
             {
                 hover = false;
+                broken = false;
                 pressed = false;
                 sprite.setColor(defCol);
             }
         }
     }
-
-    if(hover && !pressed && !broken && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    else if(hover && !pressed && !broken && event.type == sf::Event::MouseButtonPressed)
     {
         pressed = true;
 
         sprite.setColor(actCol);
     }
-    else if(!sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    else if(hover && event.type == sf::Event::MouseButtonReleased)
     {
         broken = false;
         if(pressed)
@@ -119,6 +119,24 @@ bool Button::button(sf::Event &event)
     }
 
     return false;
+}
+
+void Button::draw()
+{
+    if(window == nullptr) return;
+
+    if(texture.getSize() == sf::Vector2u())
+    {
+        sf::Image img;
+        img.create(1, 1, sf::Color(255, 255, 255));
+        texture.loadFromImage(img);
+
+        sprite.setTexture(texture);
+        updateSprite();
+    }
+
+    window->draw(sprite);
+    window->draw(text);
 }
 
 void Button::setTex(sf::Texture tex)

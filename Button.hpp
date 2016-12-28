@@ -31,13 +31,16 @@ class Button
     void updateSprite();
 
 public:
-    // Konstruktor
-    Button(sf::RenderWindow &win, sf::Vector2f pos, sf::Vector2f siz, std::string str = "");
-    Button(sf::RenderWindow &win, float posx, float posy, float sizx, float sizy, std::string str = "");
+    // Konstruktory
+    Button();
+    Button(sf::RenderWindow &win, sf::Vector2f pos = sf::Vector2f(0, 0), sf::Vector2f siz = sf::Vector2f(0, 0), std::string str = "");
+    Button(sf::RenderWindow &win, float posx = 0, float posy = 0, float sizx = 0, float sizy = 0, std::string str = "");
 
-    // Tu sie dzieje wszystko :D
     // Zwraca prawde jeśli przycisk został aktywowany :D :p
     bool button(sf::Event &event);
+
+    // Rysuje przycisk na scenie :D (Jeśli window != nullptr)
+    void draw();
 
     // Już też zrobie po kilka bo nie moge być gorszy XD
 
@@ -81,6 +84,28 @@ public:
 
     // Ustawia nowe okno
     void setWin(sf::RenderWindow &win);
+
+
+    // Wszystko to samo co wyżej tylko w drugą strone :p
+    // -------------------------------------------------
+    // Nie chce mi sie tego pisać w cpp :p
+
+    sf::Texture     getTex()        {return texture;};
+
+    sf::Vector2f    getSiz()        {return size;};
+
+    sf::Vector2f    getPos()        {return position;};
+
+    sf::Font        getFon()        {return font;};
+
+    sf::Text        getTxt()        {return text;};
+
+    sf::Color       getDefCol()     {return defCol;};
+
+    sf::Color       getHovCol()     {return hovCol;};
+
+    sf::Color       getActCol()     {return actCol;};
+
 };
 
 #endif // Button_hpp

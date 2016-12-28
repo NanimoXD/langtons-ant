@@ -36,16 +36,22 @@ public:
 
 MainWin::MainWin(sf::Vector2f winScale = sf::Vector2f(0.5, 0.75)):
     Veque       (),
-    button      (window, 0, 0, 1, 1, "Lol no witam :D"),
+    button      (),
     qwer        (true),
     winSize     (sf::VideoMode::getDesktopMode().width * winScale.x, sf::VideoMode::getDesktopMode().height * winScale.y)
 {
     button.setDefCol(255, 255, 255);
     button.setHovCol(0, 255, 255, 192);
     button.setActCol(0, 255, 255);
+    button.setWin(window);
     button.setTex("Images/background.jpg");
     button.setSiz(300, 100);
     button.setPos(winSize.x / 2 - 150, winSize.y / 2 - 50);
+
+    sf::Text text;
+    text.setFillColor(sf::Color(0, 0, 0));
+    text.setString("Lol no witam :D");
+    button.setTxt(text);
 
     clo.restart();
 }
@@ -76,28 +82,32 @@ bool MainWin::start()
     }
 
     sf::Event event;
-    while(window.pollEvent(event)){events(event);}
+    while(window.pollEvent(event))
+    {
+        events(event);
+
+        // Przycisk przycisk :D
+        // To wszystko co potrzeba :p
+        // Trzeba jednak pamiętać że funkcja zawiera rysowanie przycisku :p
+        if(button.button(event))
+        {
+            for(int i = qwer; i < size(); i += 2)
+                get(i)->setColor(sf::Color(0, 255, 255));
+
+            for(int i = !qwer; i < size(); i += 2)
+                get(i)->setColor(sf::Color(0, 0, 255));
+
+            qwer = !qwer;
+        }
+    }
 
     time = clo.getElapsedTime();
     clo.restart();
 
+    button.draw();
     window.display();
     window.clear(sf::Color::Black);
     draw(window);
-
-    // Przycisk przycisk :D
-    // To wszystko co potrzeba :p
-    // Trzeba jednak pamiętać że funkcja zawiera rysowanie przycisku :p
-    if(button.button(event))
-    {
-        for(int i = qwer; i < size(); i += 2)
-            get(i)->setColor(sf::Color(0, 255, 255));
-
-        for(int i = !qwer; i < size(); i += 2)
-            get(i)->setColor(sf::Color(0, 0, 255));
-
-        qwer = !qwer;
-    }
 
     return window.isOpen();
 }
