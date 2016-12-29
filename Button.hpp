@@ -2,7 +2,6 @@
 #define Button_hpp
 
 #include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
 
 class Button
 {
