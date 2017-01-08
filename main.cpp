@@ -1,27 +1,29 @@
 #include <SFML/System.hpp>
 
 #include "MainWin.hpp"
+#include "MainMgr.hpp"
+#include "Fps.hpp"
 
 int main()
 {
     setlocale(LC_ALL, "");
 
-    bool winFullscr = false;
+    MainWin mainWin(sf::Vector2u(800, 600), false);
+    MainMgr mainMgr(mainWin.window);
 
-    MainWin *mainWin = new MainWin(sf::Vector2u(800, 600), winFullscr);
-
-    for(int mainRet = 0; ; mainRet = mainWin->main())
+    for(int mainRet = 0; ; mainRet = mainMgr.main())
     {
+        Fps()();
+
         if(mainRet == 3)
         {
-            delete mainWin;
-            winFullscr = !winFullscr;
-            mainWin = new MainWin(sf::Vector2u(800, 600), winFullscr);
+            mainWin.newWin(sf::Vector2u(800, 600), !mainWin.isFullscreen());
+            mainMgr.placeButtons();
         }
 
         if(mainRet == 6 || mainRet == 404)
         {
-            delete mainWin;
+            mainWin.window->close();
             break;
         }
     }
