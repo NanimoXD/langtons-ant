@@ -4,9 +4,17 @@
 
 int main()
 {
-    MainWin mainWin(sf::Vector2f(800, 600));
+    setlocale(LC_ALL, "");
 
-    return mainWin.main();
+    int ret = 0;
+
+    do
+    {
+        MainWin mainWin(sf::Vector2u(800, 600), ret);
+        ret = mainWin.main();
+    }while(ret == 0 || ret == 1);
+
+    return ret;
 }
 
 

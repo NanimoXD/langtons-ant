@@ -9,8 +9,6 @@
 #define hoverColor sf::Color(160, 160, 160)
 #define activeColor sf::Color(192, 192, 192)
 
-#define marginLeft 20 // Odsunięcie textu od lewej w pixelach
-
 void Button::constructor()
 {
     setPos(position);
@@ -36,6 +34,7 @@ void Button::updateSprite()
 }
 
 Button::Button():
+    marginLeft      (20),
     textScale       (0.3),
     position        (sf::Vector2f(1, 1)),
     size            (sf::Vector2f(0, 0)),
@@ -48,6 +47,7 @@ Button::Button():
 }
 
 Button::Button(sf::RenderWindow &win, sf::Vector2f pos, sf::Vector2f siz, std::string str):
+    marginLeft      (20),
     textScale       (0.3),
     position        (pos),
     size            (siz),
@@ -61,6 +61,7 @@ Button::Button(sf::RenderWindow &win, sf::Vector2f pos, sf::Vector2f siz, std::s
 }
 
 Button::Button(sf::RenderWindow &win, float posx, float posy, float sizx, float sizy, std::string str):
+    marginLeft      (20),
     textScale       (0.3),
     position        (sf::Vector2f(posx, posy)),
     size            (sf::Vector2f(sizx, sizy)),
@@ -219,6 +220,12 @@ void Button::setTxt(sf::Text txt)
 void Button::setTxt(sf::String txt)
 {
     text.setString(txt);
+}
+
+void Button::setTxtMrg(short mrg)
+{
+    marginLeft = mrg;
+    updateSprite();
 }
 
 void Button::setTxtScl(float y)

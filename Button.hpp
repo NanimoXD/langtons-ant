@@ -14,6 +14,7 @@ class Button
 
     sf::Font font;
     sf::Text text;
+    short marginLeft;
     float textScale;
 
     sf::Vector2f position;
@@ -66,6 +67,9 @@ public:
     void setTxt(sf::Text txt); // Kolory, text i styl
     void setTxt(sf::String txt); // Trzeba uważać żeby nie był dłuższy od przycisku :p
 
+    // Ustawia margines od lewej w pixelach
+    void setTxtMrg(short mrg);
+
     // Ustawia skale czcionki do wysokości przycisku
     void setTxtScl(float y);
 
@@ -99,15 +103,21 @@ public:
 
     sf::Text        getTxt()        {return text;};
 
+    short           getMrg()        {return marginLeft;};
+
+    float           getTxtScl()     {return textScale;};
+
     sf::Color       getDefCol()     {return defCol;};
 
     sf::Color       getHovCol()     {return hovCol;};
 
     sf::Color       getActCol()     {return actCol;};
-
 };
 
 #endif // Button_hpp
+
+
+
 
 
 

@@ -1,61 +1,44 @@
 #include "MainWin.hpp"
 
-MainWin::MainWin(sf::Vector2f winSize):
-    window      (new sf::RenderWindow)
+MainWin::MainWin(sf::Vector2u winSize, bool fullScreen):
+    window              (new sf::RenderWindow),
+    isFullScreen        (fullScreen)
 {
-    window->create(sf::VideoMode(winSize.x, winSize.y, sf::VideoMode::getDesktopMode().bitsPerPixel), "Ant XD", sf::Style::Close);
+    if(fullScreen)
+    {
+        winSize.x = sf::VideoMode::getDesktopMode().width;
+        winSize.y = sf::VideoMode::getDesktopMode().height;
+    }
+
+    window->create(sf::VideoMode(winSize.x, winSize.y, sf::VideoMode::getDesktopMode().bitsPerPixel), "Ant XD", 1 << (2 + fullScreen));
     window->setFramerateLimit(60);
     window->clear(sf::Color::Black);
     window->display();
 
     /* Przynajmniej do czasu naprawienia błędu #1168 (https://github.com/SFML/SFML/issues/1168) */
-#ifndef SFML_SYSTEM_LINUX
-    sf::Image *icon = new sf::Image;
-    rubbish.push(icon);
+    #ifndef SFML_SYSTEM_LINUX
+        sf::Image *icon = new sf::Image;
 
-    if(icon->loadFromFile("Images/icon.png"))
-        window->setIcon(icon->getSize().x, icon->getSize().y, icon->getPixelsPtr());
-#endif
+        if(icon->loadFromFile("Images/icon.png"))
+            window->setIcon(icon->getSize().x, icon->getSize().y, icon->getPixelsPtr());
+        delete icon;
+    #endif
 }
 
 MainWin::~MainWin()
 {
     delete window;
-
-    delete (sf::Image*)         rubbish.front(); rubbish.pop();
-    delete (sf::Texture*)       rubbish.front(); rubbish.pop();
 }
 
 int MainWin::main()
 {
-    Button button;
-    button.setDefCol(255, 0, 0);
-    button.setHovCol(0, 255, 0);
-    button.setActCol(0, 0, 255);
-    button.setWin(*window);
-    button.setTex("Images/background.jpg");
-    button.setSiz(300, 100);
-    button.setPos(window->getSize().x / 2 - button.getSiz().x / 2, window->getSize().y / 2 - button.getSiz().y / 2);
-
-    sf::Text buttonText;
-    buttonText.setFillColor(sf::Color(0, 0, 0));
-    buttonText.setOutlineColor(sf::Color(255, 255, 255));
-    buttonText.setOutlineThickness(1);
-    buttonText.setString("Lol no witam :D");
-    button.setTxt(buttonText);
-
-    bool qwer = true;
-    Veque map;
-    createMap(map);
-
-    int fps = 0;
-    sf::Time second = sf::seconds(0);
-    sf::Time milSec = sf::seconds(0);
-
-    Ant a;
-    a.setPosition(200, 200);
-    a.setScale(0.2, 0.2);
-    a.rotate(Direction::Left);
+    Button button[5];
+    setupButtons(button, 5);    /*  0) Start / Stop
+                                 *  1) Wyjscie
+                                 *  2) Opcje
+                                 *  3) <
+                                 *  4) >
+                                 */
 
     while(start())
     {
@@ -68,90 +51,134 @@ int MainWin::main()
                 if(event.key.code == sf::Keyboard::Escape)
                     window->close();
             }
-            else
+
+            if(button[0].button(event)) // Start / Stop
             {
-                // Przycisk przycisk :D
-                if(button.button(event))
+                if(button[0].getTxt().getString() == "Start")
                 {
-                    for(int i = qwer; i < map.size(); i += 2)
-                        map.get(i)->setColor(sf::Color(0, 255, 255));
-
-                    for(int i = !qwer; i < map.size(); i += 2)
-                        map.get(i)->setColor(sf::Color(0, 0, 255));
-
-                    qwer = !qwer;
+                    button[0].setTxt("Stop");
                 }
+                else
+                {
+                    button[0].setTxt("Start");
+                }
+            }
+
+            if(button[1].button(event)) // Wyjscie
+                window->close();
+
+            if(button[2].button(event)) // Opcje
+            {
+                if(isFullScreen)
+                    return 0;
+                else
+                    return 1;
+                //options(button, 3, mapScale(czy coś)); // przyciski, ilość, skala mapy, chyba tyle
+            }
+
+            if(button[3].button(event)) // <
+            {
+
+            }
+
+            if(button[4].button(event)) // >
+            {
+
             }
         }
 
-        ++fps;
-
-        for(milSec += time; milSec > sf::milliseconds(10); milSec -= sf::milliseconds(10))
-        {
-            map.erase(map.size() * 0.25);
-            map.erase(map.size() * 0.5);
-            map.erase(map.size() * 0.75);
-        }
-
-        for(second += time; second > sf::seconds(1); second -= sf::seconds(1))
-        {
-            printf("Fps: %i\n", fps);
-            fps = 0;
-        }
-
-        map.draw(*window);
-
-        window->draw(a);
-
-        button.draw();
+        for(int i = 0; i < 5; ++i)
+            button[i].draw();
     }
 
-    return EXIT_SUCCESS;
+    return 3;
 }
 
 bool MainWin::start()
 {
-    time = clock.getElapsedTime();
-    clock.restart();
+    loopTime = loopClock.getElapsedTime();
+    loopClock.restart();
 
     window->display();
-    window->clear(sf::Color::Black);
+    window->clear(sf::Color(128, 128, 128));
+
+    fps();
 
     return window->isOpen();
 }
 
-void MainWin::createMap(Veque &map)
+void MainWin::fps()
 {
-    sf::Image ffield;
-    ffield.create(1, 1, sf::Color(255, 255, 255));
+    static sf::Time second = sf::seconds(0);
+    static int frapsPerSecond = 0;
 
-    sf::Texture *field = new sf::Texture;
-    field->loadFromImage(ffield);
+    ++frapsPerSecond;
+    second += loopTime;
 
-    const int mapx = 101;
-    const int mapy = 101;
-
-    map.push();
-    map.get()->setTexture(*field);
-    map.get()->setScale(window->getSize().x / field->getSize().x / mapx, window->getSize().y / field->getSize().y / mapy);
-
-    for(int i = 0; i < mapy; ++i)
+    if(second > sf::seconds(1))
     {
-        for(int j = 0; j < mapx; ++j)
-        {
-            map.copy();
-            map.get()->setPosition(j * window->getSize().x / mapx, i * window->getSize().y / mapy);
-        }
+        printf("Fps: %i\n", frapsPerSecond);
+        frapsPerSecond = 0;
+
+        for(; second > sf::seconds(1); second -= sf::seconds(1));
+    }
+}
+
+void MainWin::setupButtons(Button *button, int amount)
+{
+    const int width = 200;
+    const int height = 75;
+
+    for(int i = 0; i < amount; ++i)
+    {
+        button[i].setDefCol(255, 64, 64);
+        button[i].setHovCol(64, 255, 64);
+        button[i].setActCol(64, 64, 255);
+        button[i].setWin(*window);
+        button[i].setTex("Images/button.png");
+        button[i].setSiz(width, height);
+        button[i].setPos(window->getSize().x * 0.99 - button[i].getSiz().x, 0);
+        button[i].setTxtScl(0.4);
+        button[i].setTxtMrg(45);
+
+        sf::Text text;
+        text.setFillColor(sf::Color(0, 0, 0));
+        text.setOutlineColor(sf::Color(255, 255, 255));
+        text.setOutlineThickness(1);
+
+        button[i].setTxt(text);
     }
 
-    for(int i = 0; i < map.size(); i += 2)
-        map.get(i)->setColor(sf::Color(0, 255, 255));
+    // Dodatkowe ustawienia 3) "<" i 4) ">"
+    button[3].setSiz(height * 0.75, height * 0.75); // <
+    button[4].setSiz(height * 0.75, height * 0.75); // >
 
-    for(int i = 1; i < map.size(); i += 2)
-        map.get(i)->setColor(sf::Color(0, 0, 255));
+    button[3].setTxtMrg(20);
+    button[4].setTxtMrg(20);
 
-    map.erase(0);
+    // Tekst przycisków
+    button[0].setTxt("Start");
+    button[1].setTxt("Wyjscie");
+    button[2].setTxt("Opcje");
+    button[3].setTxt("<");
+    button[4].setTxt(">");
+    //button[].setTxt("");
+
+    // Pozycje przycisków
+    button[0].setPos(button[0].getPos().x, window->getSize().y * 0.02);
+    button[1].setPos(button[1].getPos().x, window->getSize().y * 0.98 - height);
+    button[2].setPos(button[2].getPos().x, window->getSize().y * 0.04 + height);
+    button[3].setPos(button[3].getPos().x, window->getSize().y * 0.06 + height * 2);
+    button[4].setPos(window->getSize().x * 0.99 - button[4].getSiz().x, button[3].getPos().y);
+    //button[].setPos();
+
 }
+
+
+
+
+
+
 
 
 

@@ -1,18 +1,14 @@
 #ifndef MainWin_hpp
 #define MainWin_hpp
 
-#include "Veque.hpp"
 #include "Button.hpp"
-#include "Ant.hpp"
 
 #include <SFML/Graphics.hpp>
-
-#include <queue>
 
 class MainWin
 {
 public:
-    MainWin(sf::Vector2f winSize);                  // Konstruktor
+    MainWin(sf::Vector2u winSize, bool fullScreen); // Konstruktor
     ~MainWin();                                     // Destruktor
 
     int main();                                     // Główna funkcja
@@ -20,16 +16,18 @@ public:
 private:
     sf::RenderWindow *window;                       // Okno :p
 
-    std::queue<void *>rubbish;                      // Śmieci do zniszczenia w destruktorze
-
     sf::Event event;                                // Event :D
 
-    sf::Time time;                                  // Czas od ostatniego wywołania start()
-    sf::Clock clock;                                // Liczy czas od ostatniego wywołania start()
+    sf::Time loopTime;                              // Czas od ostatniego wywołania start()
+    sf::Clock loopClock;                            // Liczy czas od ostatniego wywołania start()
 
-    bool start();                                   // Czyszczenie sceny i reset zegara
+    bool isFullScreen;                              // Prawda jeśli aktualnie okno jest w trybie pełnoekranowym
 
-    void createMap(Veque &map);                     // Tworzy szachownice
+    bool start();                                   // Czyszczenie sceny, reset zegara, liczenie FPS
+
+    void fps();                                     // Funkcja licząca i wyświetlająca FPS
+
+    void setupButtons(Button *buttons, int amount); // Wszystkie ustawienia związane z wyglądem przycisków
 };
 #endif // MainWin_hpp
 
