@@ -5,23 +5,33 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <cstdio>
+
 class MainWin
 {
 public:
     MainWin(sf::Vector2u winSize, bool fullScreen); // Konstruktor
     ~MainWin();                                     // Destruktor
 
-    int main();                                     // Główna funkcja
-
-private:
     sf::RenderWindow *window;                       // Okno :p
 
+    int main();                                     /*  Główna funkcja:
+                                                     *  0) Nic
+                                                     *  1) Start
+                                                     *  2) Stop
+                                                     *  3) Opcje
+                                                     *  4) <
+                                                     *  5) >
+                                                     *  6) Wyjście
+                                                     */
+
+private:
     sf::Event event;                                // Event :D
 
     sf::Time loopTime;                              // Czas od ostatniego wywołania start()
     sf::Clock loopClock;                            // Liczy czas od ostatniego wywołania start()
 
-    bool isFullScreen;                              // Prawda jeśli aktualnie okno jest w trybie pełnoekranowym
+    Button button[5];                               // Przyciski ^^
 
     bool start();                                   // Czyszczenie sceny, reset zegara, liczenie FPS
 

@@ -1,8 +1,7 @@
 #include "MainWin.hpp"
 
 MainWin::MainWin(sf::Vector2u winSize, bool fullScreen):
-    window              (new sf::RenderWindow),
-    isFullScreen        (fullScreen)
+    window              (new sf::RenderWindow)
 {
     if(fullScreen)
     {
@@ -23,6 +22,13 @@ MainWin::MainWin(sf::Vector2u winSize, bool fullScreen):
             window->setIcon(icon->getSize().x, icon->getSize().y, icon->getPixelsPtr());
         delete icon;
     #endif
+
+    setupButtons(button, 5);    /*  0) Start / Stop
+                                 *  1) Wyjscie
+                                 *  2) Opcje
+                                 *  3) <
+                                 *  4) >
+                                 */
 }
 
 MainWin::~MainWin()
@@ -32,66 +38,54 @@ MainWin::~MainWin()
 
 int MainWin::main()
 {
-    Button button[5];
-    setupButtons(button, 5);    /*  0) Start / Stop
-                                 *  1) Wyjscie
-                                 *  2) Opcje
-                                 *  3) <
-                                 *  4) >
-                                 */
+    int ret = 0;
 
-    while(start())
+    if(!start())
+        return 404;
+
+    while(window->pollEvent(event))
     {
-        while(window->pollEvent(event))
+        if(event.type == sf::Event::Closed)
+            ret = 6;
+        else if(event.type == sf::Event::KeyPressed)
         {
-            if(event.type == sf::Event::Closed)
-                window->close();
-            else if(event.type == sf::Event::KeyPressed)
+            if(event.key.code == sf::Keyboard::Escape)
+                ret = 6;
+        }
+
+        if(button[0].button(event)) // Start / Stop
+        {
+            if(button[0].getTxt().getString() == "Start")
             {
-                if(event.key.code == sf::Keyboard::Escape)
-                    window->close();
+                button[0].setTxt("Stop");
+                ret = 1;
             }
-
-            if(button[0].button(event)) // Start / Stop
+            else
             {
-                if(button[0].getTxt().getString() == "Start")
-                {
-                    button[0].setTxt("Stop");
-                }
-                else
-                {
-                    button[0].setTxt("Start");
-                }
-            }
-
-            if(button[1].button(event)) // Wyjscie
-                window->close();
-
-            if(button[2].button(event)) // Opcje
-            {
-                if(isFullScreen)
-                    return 0;
-                else
-                    return 1;
-                //options(button, 3, mapScale(czy coś)); // przyciski, ilość, skala mapy, chyba tyle
-            }
-
-            if(button[3].button(event)) // <
-            {
-
-            }
-
-            if(button[4].button(event)) // >
-            {
-
+                button[0].setTxt("Start");
+                ret = 2;
             }
         }
 
-        for(int i = 0; i < 5; ++i)
-            button[i].draw();
+        if(button[1].button(event)) // Wyjscie
+            ret = 6;
+
+        if(button[2].button(event)) // Opcje
+            ret = 3;
+
+        if(button[3].button(event)) // <
+            ret = 4;
+
+        if(button[4].button(event)) // >
+            ret = 5;
     }
 
-    return 3;
+    for(int i = 0; i < 5; ++i)
+        button[i].draw();
+
+    if(ret) printf("%i\n", ret);
+
+    return ret;
 }
 
 bool MainWin::start()

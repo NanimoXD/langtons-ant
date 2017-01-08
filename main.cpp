@@ -6,15 +6,27 @@ int main()
 {
     setlocale(LC_ALL, "");
 
-    int ret = 0;
+    bool winFullscr = false;
 
-    do
+    MainWin *mainWin = new MainWin(sf::Vector2u(800, 600), winFullscr);
+
+    for(int mainRet = 0; ; mainRet = mainWin->main())
     {
-        MainWin mainWin(sf::Vector2u(800, 600), ret);
-        ret = mainWin.main();
-    }while(ret == 0 || ret == 1);
+        if(mainRet == 3)
+        {
+            delete mainWin;
+            winFullscr = !winFullscr;
+            mainWin = new MainWin(sf::Vector2u(800, 600), winFullscr);
+        }
 
-    return ret;
+        if(mainRet == 6 || mainRet == 404)
+        {
+            delete mainWin;
+            break;
+        }
+    }
+
+    return EXIT_SUCCESS;
 }
 
 
