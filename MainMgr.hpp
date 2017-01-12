@@ -1,23 +1,22 @@
 #ifndef MainMgr_hpp
 #define MainMgr_hpp
 
+#include "MainWin.hpp"
 #include "Button.hpp"
-
-#include <SFML/Graphics.hpp>
 
 class MainMgr
 {
 public:
-    MainMgr(sf::RenderWindow *window);              // Konstruktor
+    MainMgr(MainWin &_mainWin);                     // Konstruktor
 
     int main();                                     /*  Główna funkcja:
-                                                     *  0) Nic
-                                                     *  1) Start
-                                                     *  2) Stop
-                                                     *  3) Opcje
-                                                     *  4) <
-                                                     *  5) >
-                                                     *  6) Wyjście
+                                                     *  -1) Wyjście
+                                                     *  00) Nic
+                                                     *  10) Start
+                                                     *  11) Stop
+                                                     *  20) Opcje
+                                                     *  30) <
+                                                     *  40) >
                                                      */
 
     void placeButtons();                            // Ustawia przyciski na właściwym miejscu
@@ -25,7 +24,7 @@ public:
 private:
     sf::Event event;                                // Event :D
 
-    sf::RenderWindow *window;                       // Okno :p
+    MainWin mainWin;                                // Okno :p
 
     static const char amount = 5;                   // Ilość przycisków
 

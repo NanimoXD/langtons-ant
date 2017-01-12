@@ -22,7 +22,6 @@ class Button
 
     bool hover;
     bool pressed;
-    bool broken;
 
     sf::RenderWindow *window;
 

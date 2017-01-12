@@ -5,12 +5,13 @@ sf::Clock Fps::clock;
 
 void Fps::operator()()
 {
-    ++fraps;
-
-    if(clock.getElapsedTime() > sf::seconds(1))
+    if(clock.getElapsedTime() >= sf::seconds(1))
     {
-        printf("Fps: %i\n", fraps);
+        printf("\nFps: %i\t", fraps);
         clock.restart();
         fraps = 0;
+        return;
     }
+
+    ++fraps;
 }

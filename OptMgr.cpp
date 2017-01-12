@@ -1,0 +1,166 @@
+#include "OptMgr.hpp"
+
+#include "MainWin.hpp"
+
+#include <cstdio>
+
+OptMgr::OptMgr(MainWin &_mainWin):
+    mainWin      (_mainWin)
+{
+    setupButtons();                                 /*  0) Pełny ekran
+                                                     *  1) Przycisk 2
+                                                     *  2) Przycisk 3
+                                                     *  3) Przycisk 4
+                                                     *  4) Przycisk 5
+                                                     *  5) Przycisk 6
+                                                     *  6) Przycisk 7
+                                                     *  7) Przycisk 8
+                                                     *  8) Przycisk 9
+                                                     *  9) Przycisk 10
+                                                     *  10) Przycisk 11
+                                                     *  11) Przycisk 12
+                                                     *  12) Przycisk 13
+                                                     *  13) Przycisk 14
+                                                     *  14) Przycisk 15
+                                                     *  15) Przycisk 16
+                                                     *  16) Przycisk 17
+                                                     *  17) Przycisk 18
+                                                     *  18) Powrót
+                                                     */
+}
+
+int OptMgr::main()
+{
+    int ret = 0;
+
+    while(mainWin.window->pollEvent(event))
+    {
+        if(event.type == sf::Event::Closed)
+            ret = -1;
+        else if(event.type == sf::Event::Resized)
+        {
+            sf::FloatRect view(0, 0, event.size.width, event.size.height);
+
+            if(view.width < 800) mainWin.window->setSize(sf::Vector2u(800, view.height));
+            if(view.height < 600) mainWin.window->setSize(sf::Vector2u(view.width, 600));
+
+            mainWin.window->setView(sf::View(view));
+            placeButtons();
+        }
+        else if(event.type == sf::Event::KeyPressed)
+        {
+            if(event.key.code == sf::Keyboard::Escape)
+                ret = 19;
+        }
+
+        // Przyciski ---------------------------------------
+
+        for(int i = 0; i < amount; ++i)     // Przyciski od 1 do 19
+            if(button[i].button(event))
+                ret = (i + 1) * 10;
+    }
+
+    for(int i = 0; i < amount; ++i)
+        button[i].draw();
+
+    mainWin.window->display();
+    mainWin.window->clear(sf::Color(128, 128, 128));
+
+    if(ret) printf("OptMgr: %2i\t", ret);
+
+    return ret;
+}
+
+void OptMgr::placeButtons()
+{
+    // Pierwsza kolumna
+    button[0].setPos(mainWin.window->getSize().x * 0.2 - width / 2, mainWin.window->getSize().y * 0.02);    // Pełny ekran
+    button[1].setPos(mainWin.window->getSize().x * 0.2 - width / 2, mainWin.window->getSize().y * (0.16));
+    button[2].setPos(mainWin.window->getSize().x * 0.2 - width / 2, mainWin.window->getSize().y * (0.30));
+    button[3].setPos(mainWin.window->getSize().x * 0.2 - width / 2, mainWin.window->getSize().y * (0.44));
+    button[4].setPos(mainWin.window->getSize().x * 0.2 - width / 2, mainWin.window->getSize().y * (0.58));
+    button[5].setPos(mainWin.window->getSize().x * 0.2 - width / 2, mainWin.window->getSize().y * (0.72));
+
+    // Druga kolumna
+    button[6].setPos(mainWin.window->getSize().x * 0.5 - width / 2, mainWin.window->getSize().y * 0.02);
+    button[7].setPos(mainWin.window->getSize().x * 0.5 - width / 2, mainWin.window->getSize().y * (0.16));
+    button[8].setPos(mainWin.window->getSize().x * 0.5 - width / 2, mainWin.window->getSize().y * (0.30));
+    button[9].setPos(mainWin.window->getSize().x * 0.5 - width / 2, mainWin.window->getSize().y * (0.44));
+    button[10].setPos(mainWin.window->getSize().x * 0.5 - width / 2, mainWin.window->getSize().y * (0.58));
+    button[11].setPos(mainWin.window->getSize().x * 0.5 - width / 2, mainWin.window->getSize().y * (0.72));
+
+    //Trzecia kolumna
+    button[12].setPos(mainWin.window->getSize().x * 0.8 - width / 2, mainWin.window->getSize().y * 0.02);
+    button[13].setPos(mainWin.window->getSize().x * 0.8 - width / 2, mainWin.window->getSize().y * (0.16));
+    button[14].setPos(mainWin.window->getSize().x * 0.8 - width / 2, mainWin.window->getSize().y * (0.30));
+    button[15].setPos(mainWin.window->getSize().x * 0.8 - width / 2, mainWin.window->getSize().y * (0.44));
+    button[16].setPos(mainWin.window->getSize().x * 0.8 - width / 2, mainWin.window->getSize().y * (0.58));
+    button[17].setPos(mainWin.window->getSize().x * 0.8 - width / 2, mainWin.window->getSize().y * (0.72));
+    button[18].setPos(mainWin.window->getSize().x * 0.8 - width / 2, mainWin.window->getSize().y * (0.86)); // Powrót
+}
+
+void OptMgr::setupButtons()
+{
+    button[0].setDefCol(255, 64, 64);
+    button[0].setHovCol(64, 255, 64);
+    button[0].setActCol(64, 64, 255);
+    button[0].setWin(*mainWin.window);
+    button[0].setTex("Images/button.png");
+    button[0].setSiz(width, height);
+    button[0].setTxtScl(0.4);
+
+    sf::Text text;
+    text.setFillColor(sf::Color(0, 0, 0));
+    text.setOutlineColor(sf::Color(255, 255, 255));
+    text.setOutlineThickness(1);
+
+    button[0].setTxt(text);
+
+    for(int i = 1; i < amount; ++i)
+        button[i] = button[0];
+
+    // Tekst przycisków
+    button[0].setTxt(L"Pełny ekran");
+    button[1].setTxt("Przycisk 2");
+    button[2].setTxt("Przycisk 3");
+    button[3].setTxt("Przycisk 4");
+    button[4].setTxt("Przycisk 5");
+    button[5].setTxt("Przycisk 6");
+    button[6].setTxt("Przycisk 7");
+    button[7].setTxt("Przycisk 8");
+    button[8].setTxt("Przycisk 9");
+    button[9].setTxt("Przycisk 10");
+    button[10].setTxt("Przycisk 11");
+    button[11].setTxt("Przycisk 12");
+    button[12].setTxt("Przycisk 13");
+    button[13].setTxt("Przycisk 14");
+    button[14].setTxt("Przycisk 15");
+    button[15].setTxt("Przycisk 16");
+    button[16].setTxt("Przycisk 17");
+    button[17].setTxt("Przycisk 18");
+    button[18].setTxt(L"Powrót");
+
+    // Pozycjonowanie przycisków
+    placeButtons();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

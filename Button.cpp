@@ -36,11 +36,10 @@ void Button::updateSprite()
 Button::Button():
     marginLeft      (20),
     textScale       (0.3),
-    position        (sf::Vector2f(1, 1)),
+    position        (sf::Vector2f(0, 0)),
     size            (sf::Vector2f(0, 0)),
     hover           (false),
     pressed         (false),
-    broken          (false),
     window          (nullptr)
 {
     constructor();
@@ -53,7 +52,6 @@ Button::Button(sf::RenderWindow &win, sf::Vector2f pos, sf::Vector2f siz, std::s
     size            (siz),
     hover           (false),
     pressed         (false),
-    broken          (false),
     window          (&win)
 {
     setTxt(str);
@@ -84,9 +82,6 @@ bool Button::button(sf::Event &event)
             {
                 hover = true;
                 sprite.setColor(hovCol);
-
-                if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-                    broken = true;
             }
         }
         else
@@ -94,29 +89,24 @@ bool Button::button(sf::Event &event)
             if(hover)
             {
                 hover = false;
-                broken = false;
                 pressed = false;
                 sprite.setColor(defCol);
             }
         }
     }
-    else if(hover && !pressed && !broken && event.type == sf::Event::MouseButtonPressed)
+    else if(hover && !pressed && event.type == sf::Event::MouseButtonPressed)
     {
         pressed = true;
 
         sprite.setColor(actCol);
     }
-    else if(hover && event.type == sf::Event::MouseButtonReleased)
+    else if(hover && pressed && event.type == sf::Event::MouseButtonReleased)
     {
-        broken = false;
-        if(pressed)
-        {
-            pressed = false;
+        pressed = false;
 
-            sprite.setColor(hovCol);
+        sprite.setColor(hovCol);
 
-            return true;
-        }
+        return true;
     }
 
     return false;
