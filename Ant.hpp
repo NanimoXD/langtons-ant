@@ -2,46 +2,49 @@
 #define ANT_H
 
 #include "Direction.hpp"
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
+#include <SFML/System/Vector2.hpp>
 
 
-/* Sprite reprezentujący mrówkę, posiadający określone wymiary, teksturę i dodatkowe własności */
+/* Definicja mrówki bez graficznej reprezentacji */
 
-class Ant : public sf::Sprite
+class Ant
 {
 public:
-    /* Kierunek Direction jest niezależny od faktycznego kierunku sprita,
-     * to znaczy rotate(angle) nie modyfikuje kierunku mrówki na poziomie symulacji */
-
-    /* Konstruuje gotowy sprite z kierunkiem do góry */
+    /* Konstruuje mrówkę skierowaną do góry, w pozycji (0, 0) */
     Ant();
+
+    ~Ant();
 
     /* Zwraca absolutny kierunek */
     inline Direction currentDirection() const;
 
-    /* Obraca relatywnie. Zmienia kierunek sprita */
-    void rotate(Direction dir);
+    /* Obraca mrówkę relatywnie */
+    void rotateAnt(Direction dir);
 
-    /* Obraca sprite, jednak nie wpływa na kierunek mrówki w symulacji */
-    void rotate(float angle); // aby nie ukryć metody sf::Transformable::rotate
-
-    /* Ustawia absolutny kierunek. Zmienia kierunek sprita */
+    /* Ustawia absolutny kierunek mrówki */
     void setDirection(Direction dir);
 
-    /* Ustawia teskturę mrówce na tą obecną w klasie. Wywoływana automatycznie w konstruktorze */
-    void applyTexture();
+    /* Pozycja mrówki na planszy (informacja dla obiektu klasy Board) */
+    void setPositionOnBoard(const sf::Vector2u &pos);
+    inline const sf::Vector2u & positionOnBoard() const;
+
+protected:
+    /* Informacja dla klas potomnych, że kierunek się zmienił */
+    virtual void directionChanged(Direction previous_direction);
 
 private:
-    /* Wczytuje teksturę mrówki z pliku, jeżeli jeszcze nie załadowana */
-    void loadTexture();
-
     Direction direction;
-    static sf::Texture ant_texture;
+    sf::Vector2u board_position;
 };
 
 
 Direction Ant::currentDirection() const
 { return direction; }
+
+inline void Ant::setPositionOnBoard(const sf::Vector2u &pos)
+{ board_position = pos; }
+
+const sf::Vector2u & Ant::positionOnBoard() const
+{ return board_position; }
 
 #endif // ANT_H
