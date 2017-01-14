@@ -49,6 +49,10 @@ public:
     inline FieldColorId getNewFieldColor() const;
 
 private:
+    /* Blokuję kopiowanie obiektów, na razie nie potrzebna funkcjonalność */
+    Board(const Board &) = delete;
+    Board & operator=(const Board &) = delete;
+
     FieldColorId **data;
     sf::Vector2u data_size;
     FieldColorId new_field_color;
