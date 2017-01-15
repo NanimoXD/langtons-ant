@@ -1,8 +1,8 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "Ant.hpp"
 #include <SFML/System/Vector2.hpp>
-#include <array>
 
 
 /* Nic innego jak indeks koloru w palecie */
@@ -28,11 +28,11 @@ public:
     /* Zmienia rozmiar planszy, odpowiednio ją pomniejszając lub powiększając.
      * Jeżeli zmiana powoduje zwiększenie planszy, nowe pola zostaną zainicjalizowane kolorem (id) o wartości getNewCellColor().
      * Dodatkowy argument określa punkt, w jakim aktualne dane planszy zostaną umiejscowione po zmianie jej rozmiaru (w nowej planszy).
-     * W niektórych sytuacjach może to spowodować utratę informacji
+     * W niektórych sytuacjach może to spowodować utratę informacji lub mrówki.
      */
     void resize(const sf::Vector2u &new_size, const sf::Vector2i &current_map_point = sf::Vector2i());
 
-    /* Czyści planszę, tj. po wywołaniu ma ona rozmiar (0, 0) */
+    /* Czyści planszę, tj. po wywołaniu ma ona rozmiar (0, 0). Ewentualna obecna mrówka ginie, zostaje usunięta */
     void clear();
 
     /* Metody do pobierania rozmiaru planszy */
@@ -48,6 +48,19 @@ public:
     void setNewFieldColor(FieldColorId color_id);
     inline FieldColorId getNewFieldColor() const;
 
+    /* Umiejscawia mrówkę na planszy, jeżeli argument jest prawidłowym wskaźnikiem.
+     * Mrówka musi posiadać pozycję odpowiednią do rozmiaru planszy, inaczej nie zostanie przypisana, lecz zniszczona (brrr!).
+     * Uwaga: klasa bierze odpowiedzialność za obiekt mrówki i usuwa ją w swoim destruktorze (użyj new).
+     * Jeśli na planszy jest już mrówka, zostaje zastąpiona nową */
+    void placeAnt(Ant *ant_ptr);
+
+    /* Usuwa mrówkę z planszy, wywołuje jej destruktor. Gdy plansza nie ma mrówki, nic się nie dzieje */
+    void removeAnt();
+
+    /* Wskaźnik na mrówkę. Może być pusty */
+    /** @todo W ten sposób można "hakować" położenie i nabroić, trzeba będzie coś pomyśleć */
+    inline Ant * getAnt();
+
 private:
     /* Blokuję kopiowanie obiektów, na razie nie potrzebna funkcjonalność */
     Board(const Board &) = delete;
@@ -56,6 +69,7 @@ private:
     FieldColorId **data;
     sf::Vector2u data_size;
     FieldColorId new_field_color;
+    Ant *ant;
 };
 
 sf::Vector2u Board::size() const
@@ -78,5 +92,8 @@ inline void Board::setNewFieldColor(FieldColorId color_id)
 
 FieldColorId Board::getNewFieldColor() const
 { return new_field_color; }
+
+Ant * Board::getAnt()
+{ return ant; }
 
 #endif // BOARD_H
