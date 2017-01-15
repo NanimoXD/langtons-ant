@@ -10,7 +10,7 @@ public:
 
     sf::RenderWindow *window;                                   // Okno
 
-    void newWin(sf::Vector2u winSiz, bool _fullscreen = false); // Usuwa stare i tworzy nowe okno
+    void newWin(sf::Vector2u winSiz, bool _fullscreen = false); // Zwiększa, zmniejsza lub załącza tryb pełnoekranowy okna
 
     bool isFullscreen();                                        // Jeżeli okno jest w trybie pełnoekranowym zwraca prawde
 

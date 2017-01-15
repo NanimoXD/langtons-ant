@@ -5,12 +5,15 @@
 
 class Fps
 {
-    static sf::Clock clock;     // Zegar odliczający sekunde
-
-    static unsigned int fraps;  // Licznik fps
-
 public:
-    void operator()();            // Zlicza fps i wyświetla ich ilość co sekundę
+    void operator()();              // Zlicza fps i wyświetla ich ilość co sekundę
+
+private:
+    static sf::Clock clock;         // Zegar odliczający sekunde
+
+    static unsigned short fraps;    // Licznik fps
+
+    static unsigned short amount;   // Licznik logów
 };
 
 #endif // Fps_hpp

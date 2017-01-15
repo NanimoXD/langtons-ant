@@ -3,43 +3,18 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <queue>
+
 class Button
 {
-    sf::Texture texture;
-    sf::Sprite sprite;
-
-    sf::Color defCol;
-    sf::Color hovCol;
-    sf::Color actCol;
-
-    sf::Font font;
-    sf::Text text;
-    short marginLeft;
-    float textScale;
-
-    sf::Vector2f position;
-    sf::Vector2f size;
-
-    bool hover;
-    bool pressed;
-
-    sf::RenderWindow *window;
-
-    void constructor(); // :p
-
-    void updateSprite();
-
 public:
     // Konstruktory
     Button();
     Button(sf::RenderWindow &win, sf::Vector2f pos = sf::Vector2f(0, 0), sf::Vector2f siz = sf::Vector2f(0, 0), std::string str = "");
     Button(sf::RenderWindow &win, float posx = 0, float posy = 0, float sizx = 0, float sizy = 0, std::string str = "");
 
-    // Zwraca prawde jeśli przycisk został aktywowany :D :p
-    bool button(sf::Event &event);
-
-    // Rysuje przycisk na scenie :D (Jeśli window != nullptr)
-    void draw();
+    // Rysuje przycisk i zwraca prawde jeśli przycisk został aktywowany :D :p
+    short button();
 
     // Już też zrobie po kilka bo nie moge być gorszy XD
 
@@ -62,9 +37,17 @@ public:
     void setFon(sf::Font &fon);
     bool setFon(sf::String fon); // Źródło czcionki
 
-    // Ustawia nowy tekst
-    void setTxt(sf::Text txt); // Kolory, text i styl
-    void setTxt(sf::String txt); // Trzeba uważać żeby nie był dłuższy od przycisku :p
+    // Kopiuje kolory i styl
+    void setTxt(sf::Text txt);
+
+    // Dodaje nowy text na koniec kolejki
+    void addStr(sf::String txt); // Trzeba uważać żeby nie był dłuższy od przycisku :p
+
+    // Czyści kolejke
+    void clrStr();
+
+    // Zmienia tekst na kolejny w kolejce i zwraca jego numer
+    short nxtStr();
 
     // Ustawia margines od lewej w pixelach
     void setTxtMrg(short mrg);
@@ -92,25 +75,59 @@ public:
     // -------------------------------------------------
     // Nie chce mi sie tego pisać w cpp :p
 
-    sf::Texture     getTex()        {return texture;};
+    bool            isPrst()        {return pressed;}
 
-    sf::Vector2f    getSiz()        {return size;};
+    bool            isHovr()        {return hover;}
 
-    sf::Vector2f    getPos()        {return position;};
+    sf::Texture     getTex()        {return texture;}
 
-    sf::Font        getFon()        {return font;};
+    sf::Vector2f    getSiz()        {return size;}
 
-    sf::Text        getTxt()        {return text;};
+    sf::Vector2f    getPos()        {return position;}
 
-    short           getMrg()        {return marginLeft;};
+    sf::Font        getFon()        {return font;}
 
-    float           getTxtScl()     {return textScale;};
+    sf::Text        getTxt()        {return text;}
 
-    sf::Color       getDefCol()     {return defCol;};
+    short           getTxtNum()     {return textID;}
 
-    sf::Color       getHovCol()     {return hovCol;};
+    short           getMrg()        {return marginLeft;}
 
-    sf::Color       getActCol()     {return actCol;};
+    float           getTxtScl()     {return textScale;}
+
+    sf::Color       getDefCol()     {return defCol;}
+
+    sf::Color       getHovCol()     {return hovCol;}
+
+    sf::Color       getActCol()     {return actCol;}
+
+private:
+    sf::Texture texture;
+    sf::Sprite sprite;
+
+    sf::Color defCol;
+    sf::Color hovCol;
+    sf::Color actCol;
+
+    sf::Font font;
+    sf::Text text;
+    unsigned short textID;
+    std::queue<std::string> strings;
+    short marginLeft;
+    float textScale;
+
+    sf::Vector2f position;
+    sf::Vector2f size;
+
+    bool hover;
+    bool broken;
+    bool pressed;
+
+    sf::RenderWindow *window;
+
+    void constructor(); // :p
+
+    void updateSprite();
 };
 
 #endif // Button_hpp

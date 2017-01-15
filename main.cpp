@@ -1,6 +1,7 @@
 #include "MainWin.hpp"
 #include "MainMgr.hpp"
 #include "OptMgr.hpp"
+#include "RenderMap.hpp"
 #include "Fps.hpp"
 
 void options(MainWin &mainWin)

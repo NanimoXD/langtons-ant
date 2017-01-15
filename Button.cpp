@@ -9,36 +9,14 @@
 #define hoverColor sf::Color(160, 160, 160)
 #define activeColor sf::Color(192, 192, 192)
 
-void Button::constructor()
-{
-    setPos(position);
-    setSiz(size);
-    setDefCol(defaultColor);
-    setHovCol(hoverColor);
-    setActCol(activeColor);
-
-    sprite.setColor(defaultColor);
-
-    if(!setFon(fontSource))
-        setFon(reserveFontSource);
-}
-
-void Button::updateSprite()
-{
-    text.setCharacterSize(size.y * textScale);
-    text.setOrigin(-marginLeft, size.y * textScale / 2);
-    text.setPosition(position.x, position.y + size.y / 2);
-
-    sprite.setScale(size.x / texture.getSize().x, size.y / texture.getSize().y);
-    sprite.setPosition(position);
-}
-
 Button::Button():
+    textID          (1),
     marginLeft      (20),
     textScale       (0.3),
     position        (sf::Vector2f(0, 0)),
     size            (sf::Vector2f(0, 0)),
     hover           (false),
+    broken          (false),
     pressed         (false),
     window          (nullptr)
 {
@@ -46,75 +24,85 @@ Button::Button():
 }
 
 Button::Button(sf::RenderWindow &win, sf::Vector2f pos, sf::Vector2f siz, std::string str):
+    textID          (1),
     marginLeft      (20),
     textScale       (0.3),
     position        (pos),
     size            (siz),
     hover           (false),
+    broken          (false),
     pressed         (false),
     window          (&win)
 {
-    setTxt(str);
+    addStr(str);
     constructor();
 }
 
 Button::Button(sf::RenderWindow &win, float posx, float posy, float sizx, float sizy, std::string str):
+    textID          (1),
     marginLeft      (20),
     textScale       (0.3),
     position        (sf::Vector2f(posx, posy)),
     size            (sf::Vector2f(sizx, sizy)),
     hover           (false),
+    broken          (false),
     pressed         (false),
     window          (&win)
 {
-    setTxt(str);
+    addStr(str);
     constructor();
 }
 
-bool Button::button(sf::Event &event)
+short Button::button()
 {
-    if(event.type == sf::Event::MouseMoved)
+    if(window == nullptr) return -1;
+
+    short ret = 0;
+
+    sf::Vector2i mousePosition(window->mapCoordsToPixel((sf::Vector2f)sf::Mouse::getPosition(*window)));
+
+    if(mousePosition.x > position.x && mousePosition.x < position.x + size.x &&
+       mousePosition.y > position.y && mousePosition.y < position.y + size.y)
     {
-        if(event.mouseMove.x > position.x && event.mouseMove.x < position.x + size.x &&
-           event.mouseMove.y > position.y && event.mouseMove.y < position.y + size.y)
+        if(!hover)
         {
-            if(!hover)
-            {
-                hover = true;
-                sprite.setColor(hovCol);
-            }
-        }
-        else
-        {
-            if(hover)
-            {
-                hover = false;
-                pressed = false;
-                sprite.setColor(defCol);
-            }
+            hover = true;
+            sprite.setColor(hovCol);
+
+            if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                broken = true;
         }
     }
-    else if(hover && !pressed && event.type == sf::Event::MouseButtonPressed)
+    else
+    {
+        if(hover)
+        {
+            hover = false;
+            broken = false;
+            pressed = false;
+            sprite.setColor(defCol);
+        }
+    }
+
+    if(hover && !pressed && !broken && sf::Mouse::isButtonPressed( sf::Mouse::Left ))
     {
         pressed = true;
 
         sprite.setColor(actCol);
     }
-    else if(hover && pressed && event.type == sf::Event::MouseButtonReleased)
+
+    if(hover && !sf::Mouse::isButtonPressed( sf::Mouse::Left ))
     {
-        pressed = false;
+        broken = false;
+        if(pressed)
+        {
+            pressed = false;
 
-        sprite.setColor(hovCol);
+            sprite.setColor(hovCol);
 
-        return true;
+            ret = nxtStr();
+        }
     }
-
-    return false;
-}
-
-void Button::draw()
-{
-    if(window == nullptr) return;
 
     if(texture.getSize() == sf::Vector2u())
     {
@@ -128,6 +116,8 @@ void Button::draw()
 
     window->draw(sprite);
     window->draw(text);
+
+    return ret;
 }
 
 void Button::setTex(sf::Texture tex)
@@ -200,16 +190,62 @@ bool Button::setFon(sf::String fon)
 
 void Button::setTxt(sf::Text txt)
 {
-    text.setString(txt.getString());
     text.setFillColor(txt.getFillColor());
     text.setOutlineColor(txt.getOutlineColor());
     text.setOutlineThickness(txt.getOutlineThickness());
     text.setStyle(txt.getStyle());
 }
 
-void Button::setTxt(sf::String txt)
+void Button::addStr(sf::String txt)
 {
-    text.setString(txt);
+    if(txt == "")
+        return;
+
+    if(strings.empty())
+        text.setString(txt);
+
+    for(sf::Uint8 rep_ID = textID; rep_ID <= strings.size(); ++rep_ID)
+    {
+        strings.push(strings.front());
+        strings.pop();
+    }
+
+    strings.push(txt);
+
+    for(sf::Uint8  i = 1; i < textID; ++i)
+    {
+        strings.push(strings.front());
+        strings.pop();
+    }
+}
+
+void Button::clrStr()
+{
+    while(!strings.empty())
+        strings.pop();
+
+    text.setString("");
+
+    textID = 1;
+}
+
+short Button::nxtStr()
+{
+    if(strings.empty())
+        return 1;
+
+    strings.push(strings.front());
+    strings.pop();
+    text.setString(strings.front());
+
+    ++textID;
+    if(strings.size() < textID)
+    {
+        textID = 1;
+        return strings.size();
+    }
+
+    return textID - 1;
 }
 
 void Button::setTxtMrg(short mrg)
@@ -263,6 +299,30 @@ void Button::setActCol(char r, char g, char b, char a)
 void Button::setWin(sf::RenderWindow &win)
 {
     window = &win;
+}
+
+void Button::constructor()
+{
+    setPos(position);
+    setSiz(size);
+    setDefCol(defaultColor);
+    setHovCol(hoverColor);
+    setActCol(activeColor);
+
+    sprite.setColor(defaultColor);
+
+    if(!setFon(fontSource))
+        setFon(reserveFontSource);
+}
+
+void Button::updateSprite()
+{
+    text.setCharacterSize(size.y * textScale);
+    text.setOrigin(-marginLeft, size.y * textScale / 2);
+    text.setPosition(position.x, position.y + size.y / 2);
+
+    sprite.setScale(size.x / texture.getSize().x, size.y / texture.getSize().y);
+    sprite.setPosition(position);
 }
 
 #undef textureSource

@@ -23,54 +23,41 @@ int MainMgr::main()
             ret = -1;
         else if(event.type == sf::Event::Resized)
         {
-            sf::FloatRect view(0, 0, event.size.width, event.size.height);
-
-            if(view.width < 800) mainWin.window->setSize(sf::Vector2u(800, view.height));
-            if(view.height < 600) mainWin.window->setSize(sf::Vector2u(view.width, 600));
-
-            mainWin.window->setView(sf::View(view));
+            mainWin.newWin(sf::Vector2u(event.size.width, event.size.height));
             placeButtons();
+        }
+        else if(event.type == sf::Event::LostFocus)
+        {
+            do
+            {
+                if(!mainWin.window->pollEvent(event))
+                    sf::sleep(sf::milliseconds(500));
+            }while(event.type != sf::Event::GainedFocus);
+
         }
         else if(event.type == sf::Event::KeyPressed)
         {
             if(event.key.code == sf::Keyboard::Escape)
                 ret = -1;
         }
-
-        // Przyciski ---------------------------------------
-
-        if(button[0].button(event))         // Start / Stop
-        {
-            if(button[0].getTxt().getString() == "Start")
-            {
-                button[0].setTxt("Stop");
-                ret = 10;
-            }
-            else
-            {
-                button[0].setTxt("Start");
-                ret = 11;
-            }
-        }
-
-        if(button[1].button(event))    // Opcje
-            ret = 20;
-
-
-        if(button[2].button(event))    // <
-            ret = 30;
-
-
-        if(button[3].button(event))    // >
-            ret = 40;
-
-
-        if(button[4].button(event))    // Wyjście
-            ret = -1;
     }
 
-    for(int i = 0; i < 5; ++i)
-        button[i].draw();
+    // Przyciski ---------------------------------------
+
+    switch(button[0].button())  // Start / Stop
+    {
+    case 1:
+        ret = 10;
+        break;
+    case 2:
+        ret = 11;
+        break;
+    }
+
+    if(button[1].button()) ret = 20;    // Opcje
+    if(button[2].button()) ret = 30;    // <
+    if(button[3].button()) ret = 40;    // >
+    if(button[4].button()) ret = -1;    // Wyjście
 
     mainWin.window->display();
     mainWin.window->clear(sf::Color(128, 128, 128));
@@ -118,11 +105,12 @@ void MainMgr::setupButtons()
     button[3].setTxtMrg(20);
 
     // Tekst przycisków
-    button[0].setTxt("Start");
-    button[1].setTxt("Opcje");
-    button[2].setTxt("<");
-    button[3].setTxt(">");
-    button[4].setTxt(L"Wyjście");
+    button[0].addStr("Start");
+    button[0].addStr("Stop");
+    button[1].addStr("Opcje");
+    button[2].addStr("<");
+    button[3].addStr(">");
+    button[4].addStr(L"Wyjście");
 
     // Pozycjonowanie przycisków
     placeButtons();
