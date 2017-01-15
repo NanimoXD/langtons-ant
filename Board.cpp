@@ -90,7 +90,7 @@ void Board::placeAnt(Ant *ant_ptr)
         return;
 
     /* Na pustej planszy ani na pozycjach przekraczających rozmiar nie można umieszczać mrówki */
-    if (!data || ant_ptr->positionOnBoard().x > width() || ant_ptr->positionOnBoard().y > height()) {
+    if (!data || ant_ptr->positionOnBoard().x >= width() || ant_ptr->positionOnBoard().y >= height()) {
         std::cout << "Przykro nam, ale mrówka nie mieści się na planszy. Musi zniknąć :c" << std::endl;
         delete ant_ptr;
     } else {
