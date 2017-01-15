@@ -13,7 +13,7 @@ public:
     /* Konstruuje mrówkę skierowaną do góry, w pozycji (0, 0) */
     Ant();
 
-    ~Ant();
+    virtual ~Ant();
 
     /* Zwraca absolutny kierunek */
     inline Direction currentDirection() const;

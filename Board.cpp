@@ -1,4 +1,5 @@
 #include "Board.hpp"
+#include <iostream>
 
 
 Board::Board()
@@ -7,7 +8,8 @@ Board::Board()
 
 Board::Board(const sf::Vector2u &size, FieldColorId color_id)
     : data(nullptr),
-      new_field_color(color_id)
+      new_field_color(color_id),
+      ant(nullptr)
 {
     resize(size);
 }
@@ -53,11 +55,17 @@ void Board::resize(const sf::Vector2u &new_size, const sf::Vector2i &current_map
         new_data[row] = row_data;
     }
 
+    /* Zachowuję mrówkę */
+    Ant *ant_ptr = ant;
+    ant = nullptr;
+
     /* Dealokacja dawnych danych i przypisanie nowych */
     clear();
-
     data = new_data;
     data_size = new_size;
+
+    /* Być może mrówka zmieści się na nowej planszy */
+    placeAnt(ant_ptr);
 }
 
 void Board::clear()
@@ -70,5 +78,29 @@ void Board::clear()
 
         data = nullptr;
         data_size = sf::Vector2u();
+
+        /* Nie ma opcji żeby jakaś mróweczka przetrwała apokalipsę */
+        removeAnt();
     }
+}
+
+void Board::placeAnt(Ant *ant_ptr)
+{
+    if (!ant_ptr || ant == ant_ptr)
+        return;
+
+    /* Na pustej planszy ani na pozycjach przekraczających rozmiar nie można umieszczać mrówki */
+    if (!data || ant_ptr->positionOnBoard().x >= width() || ant_ptr->positionOnBoard().y >= height()) {
+        std::cout << "Przykro nam, ale mrówka nie mieści się na planszy. Musi zniknąć :c" << std::endl;
+        delete ant_ptr;
+    } else {
+        removeAnt();
+        ant = ant_ptr;
+    }
+}
+
+void Board::removeAnt()
+{
+    delete ant;
+    ant = nullptr;
 }
