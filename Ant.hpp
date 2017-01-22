@@ -13,8 +13,10 @@ public:
     /* Konstruuje mrówkę skierowaną do góry, w pozycji (0, 0) */
     Ant();
 
+    explicit Ant(const sf::Vector2u &position, Direction dir = Direction::Up);
+
     /* Zwraca absolutny kierunek */
-    inline Direction currentDirection() const;
+    inline Direction getDirection() const;
 
     /* Obraca mrówkę relatywnie */
     void rotateAnt(Direction dir);
@@ -23,22 +25,25 @@ public:
     void setDirection(Direction dir);
 
     /* Pozycja mrówki na planszy (informacja dla obiektu klasy Board) */
-    void setPositionOnBoard(const sf::Vector2u &pos);
-    inline const sf::Vector2u & positionOnBoard() const;
+    void setPosition(const sf::Vector2u &position);
+    inline const sf::Vector2u & getPosition() const;
 
 private:
     Direction direction;
-    sf::Vector2u board_position;
+    sf::Vector2u on_board_position;
 };
 
 
-Direction Ant::currentDirection() const
+Direction Ant::getDirection() const
 { return direction; }
 
-inline void Ant::setPositionOnBoard(const sf::Vector2u &pos)
-{ board_position = pos; }
+inline void Ant::setDirection(Direction dir)
+{ direction = dir; }
 
-const sf::Vector2u & Ant::positionOnBoard() const
-{ return board_position; }
+inline void Ant::setPosition(const sf::Vector2u &position)
+{ on_board_position = position; }
+
+const sf::Vector2u & Ant::getPosition() const
+{ return on_board_position; }
 
 #endif // ANT_H
