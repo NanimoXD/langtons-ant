@@ -1,25 +1,17 @@
 #include "Ant.hpp"
 
+
 Ant::Ant()
     : direction(Direction::Up)
 { }
 
-Ant::~Ant()
-{ }
+Ant::Ant(const sf::Vector2u &position, Direction dir)
+{
+    on_board_position = position;
+    direction = dir;
+}
 
 void Ant::rotateAnt(Direction dir)
 {
-    Direction prev_dir = direction;
     direction = rotateDirection(direction, dir);
-    directionChanged(prev_dir);
 }
-
-void Ant::setDirection(Direction dir)
-{
-    Direction prev_dir = direction;
-    direction = dir;
-    directionChanged(prev_dir);
-}
-
-void Ant::directionChanged(Direction /*previous_direction*/)
-{ }

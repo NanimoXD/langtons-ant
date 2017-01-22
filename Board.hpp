@@ -5,7 +5,7 @@
 #include <SFML/System/Vector2.hpp>
 
 
-/* Nic innego jak indeks koloru w palecie */
+/* Nic innego jak indeks koloru w regule symulacji */
 typedef unsigned int FieldColorId;
 
 
@@ -32,7 +32,7 @@ public:
      */
     void resize(const sf::Vector2u &new_size, const sf::Vector2i &current_map_point = sf::Vector2i());
 
-    /* Czyści planszę, tj. po wywołaniu ma ona rozmiar (0, 0). Ewentualna obecna mrówka ginie, zostaje usunięta */
+    /* Czyści planszę, tj. po wywołaniu ma ona rozmiar (0, 0). Ewentualna obecna mrówka zostaje usunięta */
     void clear();
 
     /* Metody do pobierania rozmiaru planszy */
@@ -44,22 +44,30 @@ public:
     void setFieldColor(const sf::Vector2u &point, FieldColorId color_id);
     FieldColorId getFieldColor(const sf::Vector2u &point) const;
 
-    /* Kolor nowych pól przydzielanych w momecie ich tworzenia. Domyślnie jest to 0 */
+    /* Id koloru nowych pól w momecie ich tworzenia. Domyślnie jest to 0 */
     void setNewFieldColor(FieldColorId color_id);
     inline FieldColorId getNewFieldColor() const;
 
-    /* Umiejscawia mrówkę na planszy, jeżeli argument jest prawidłowym wskaźnikiem.
-     * Mrówka musi posiadać pozycję odpowiednią do rozmiaru planszy, inaczej nie zostanie przypisana, lecz zniszczona (brrr!).
-     * Uwaga: klasa bierze odpowiedzialność za obiekt mrówki i usuwa ją w swoim destruktorze (użyj new).
-     * Jeśli na planszy jest już mrówka, zostaje zastąpiona nową */
-    void placeAnt(Ant *ant_ptr);
+    /* Umiejscawia mrówkę na planszy.
+     * Jeśli na planszy jest już mrówka, zostaje zastąpiona nową.
+     * Mrówka musi posiadać pozycję odpowiednią do rozmiaru planszy, aby została przypisana i zastąpiła poprzednią.
+     */
+    void placeAnt(const Ant &a);
 
-    /* Usuwa mrówkę z planszy, wywołuje jej destruktor. Gdy plansza nie ma mrówki, nic się nie dzieje */
+    /* Zwraca true, jeżeli mrówka istnieje na plaszy (i ma poprawne pozycje), w innym wypadku false */
+    bool hasAnt() const;
+
+    /* Usuwa mrówkę z planszy */
     void removeAnt();
 
-    /* Wskaźnik na mrówkę. Może być pusty */
-    /** @todo W ten sposób można "hakować" położenie i nabroić, trzeba będzie coś pomyśleć */
-    inline Ant * getAnt();
+    /* Zwraca obiekt mrówki. Dane są uznawane za poprawne, gdy hasAnt() zwraca true, w innym przypadku pozycja jest niepoprawna */
+    inline const Ant & getAnt() const;
+
+    /* Ustawia pojedyncze dane mrówki. Tworzy ją, gdy nie istnieje, używając konstuktora domyślnego.
+     * Pozycja musi być odpowiednia do rozmiaru planszy.
+     */
+    void setAntPosition(const sf::Vector2u &position);
+    void setAntDirection(Direction dir);
 
 private:
     /* Blokuję kopiowanie obiektów, na razie nie potrzebna funkcjonalność */
@@ -69,7 +77,7 @@ private:
     FieldColorId **data;
     sf::Vector2u data_size;
     FieldColorId new_field_color;
-    Ant *ant;
+    Ant ant;
 };
 
 sf::Vector2u Board::size() const
@@ -93,7 +101,8 @@ inline void Board::setNewFieldColor(FieldColorId color_id)
 FieldColorId Board::getNewFieldColor() const
 { return new_field_color; }
 
-Ant * Board::getAnt()
+const Ant & Board::getAnt() const
 { return ant; }
+
 
 #endif // BOARD_H

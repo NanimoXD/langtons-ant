@@ -1,5 +1,4 @@
 #include "Board.hpp"
-#include <iostream>
 
 
 Board::Board()
@@ -8,8 +7,7 @@ Board::Board()
 
 Board::Board(const sf::Vector2u &size, FieldColorId color_id)
     : data(nullptr),
-      new_field_color(color_id),
-      ant(nullptr)
+      new_field_color(color_id)
 {
     resize(size);
 }
@@ -55,17 +53,20 @@ void Board::resize(const sf::Vector2u &new_size, const sf::Vector2i &current_map
         new_data[row] = row_data;
     }
 
-    /* Zachowuję mrówkę */
-    Ant *ant_ptr = ant;
-    ant = nullptr;
+    /* Zachowuję mrówkę, gdyż clear() ją usuwa */
+    bool had_ant = hasAnt();
+    Ant ant_copy = ant;
 
     /* Dealokacja dawnych danych i przypisanie nowych */
     clear();
     data = new_data;
     data_size = new_size;
 
-    /* Być może mrówka zmieści się na nowej planszy */
-    placeAnt(ant_ptr);
+    /* Zmiana rozmiaru zachodzi później, konieczne dwukrotne usunięcie i umieszczenie oryginału */
+    removeAnt();
+
+    if (had_ant)
+        placeAnt(ant_copy);
 }
 
 void Board::clear()
@@ -84,23 +85,33 @@ void Board::clear()
     }
 }
 
-void Board::placeAnt(Ant *ant_ptr)
+void Board::placeAnt(const Ant &a)
 {
-    if (!ant_ptr || ant == ant_ptr)
-        return;
-
     /* Na pustej planszy ani na pozycjach przekraczających rozmiar nie można umieszczać mrówki */
-    if (!data || ant_ptr->positionOnBoard().x >= width() || ant_ptr->positionOnBoard().y >= height()) {
-        std::cout << "Przykro nam, ale mrówka nie mieści się na planszy. Musi zniknąć :c" << std::endl;
-        delete ant_ptr;
-    } else {
-        removeAnt();
-        ant = ant_ptr;
-    }
+    if (a.getPosition().x < width() && a.getPosition().y < height())
+        ant = a;
+}
+
+bool Board::hasAnt() const
+{
+    return ant.getPosition().x < width() && ant.getPosition().y < height();
 }
 
 void Board::removeAnt()
 {
-    delete ant;
-    ant = nullptr;
+    ant = Ant(size()); // tzn. przekracza rozmiar planszy, taki punkt nie istnieje
+}
+
+void Board::setAntPosition(const sf::Vector2u &position)
+{
+    Ant ant_new = hasAnt() ? ant : Ant();
+    ant_new.setPosition(position);
+    placeAnt(ant_new);
+}
+
+void Board::setAntDirection(Direction dir)
+{
+    Ant ant_new = hasAnt() ? ant : Ant();
+    ant_new.setDirection(dir);
+    placeAnt(ant_new);
 }
