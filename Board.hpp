@@ -5,7 +5,7 @@
 #include <SFML/System/Vector2.hpp>
 
 
-/* Nic innego jak indeks koloru w palecie */
+/* Nic innego jak indeks koloru w regule symulacji */
 typedef unsigned int FieldColorId;
 
 
@@ -44,7 +44,7 @@ public:
     void setFieldColor(const sf::Vector2u &point, FieldColorId color_id);
     FieldColorId getFieldColor(const sf::Vector2u &point) const;
 
-    /* Kolor nowych pól przydzielanych w momecie ich tworzenia. Domyślnie jest to 0 */
+    /* Id koloru nowych pól w momecie ich tworzenia. Domyślnie jest to 0 */
     void setNewFieldColor(FieldColorId color_id);
     inline FieldColorId getNewFieldColor() const;
 
