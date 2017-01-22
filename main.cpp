@@ -1,7 +1,7 @@
 #include "MainWin.hpp"
 #include "MainMgr.hpp"
 #include "OptMgr.hpp"
-#include "RenderMap.hpp"
+#include "BoardView.hpp"
 #include "Fps.hpp"
 
 void options(MainWin &mainWin)
@@ -42,9 +42,17 @@ int main()
     MainWin mainWin(sf::Vector2u(800, 600));
     MainMgr mainMgr(mainWin);
 
+    BoardView boardView;
+
+    boardView.setSprPos(sf::Vector2f(mainWin.window->getSize().x * 0.99, mainWin.window->getSize().y * 0.98));
+
+    boardView.setCol(sf::Vector2u(5, 10), sf::Color(255, 0, 0));
+
     while(mainWin.window->isOpen())
     {
         Fps()();
+
+        boardView.draw();
 
         switch(mainMgr.main())
         {

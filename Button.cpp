@@ -84,14 +84,14 @@ short Button::button()
         }
     }
 
-    if(hover && !pressed && !broken && sf::Mouse::isButtonPressed( sf::Mouse::Left ))
+    if(hover && !pressed && !broken && sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         pressed = true;
 
         sprite.setColor(actCol);
     }
 
-    if(hover && !sf::Mouse::isButtonPressed( sf::Mouse::Left ))
+    if(hover && !sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         broken = false;
         if(pressed)

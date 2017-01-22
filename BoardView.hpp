@@ -6,18 +6,56 @@
 class BoardView
 {
 public:
-    BoardView(sf::Vector2u pos, sf::Vector2u sizeTex, sf::Vector2u sizeMap, sf::Color color);
+    BoardView();                                    // Konstruktor
 
-    void color(sf::Vector2u pos, sf::Color color);
+    void draw();                                    // Rysuje mape na scenie
 
-    sf::Sprite getMap();
+    void setCol(sf::Vector2u pos, sf::Color color); // Zmienia kolor w danym polu,
+                                                    // jeżli wykroczy poza zakres nie zrobi nic :p
+
+    void setSprPos(sf::Vector2f pos);               // Zmienia pozycje sprita w oknie
+
+    void setSprSiz(sf::Vector2u siz);               // Zmienia rozmiar textury w pixelach
+
+    void setMapPos(sf::Vector2u pos);               // Zmienia pozycje mapy w sprajcie
+
+    void setMapSiz(sf::Vector2u siz);               // Zmienia ilość wyświetlanych pól
+
+    void setWin(sf::RenderWindow *win);             // Ustawia okno
 
 private:
-    sf::RenderWindow window;
+    sf::RenderWindow *window;                       // Okno :D
 
-    sf::Sprite sprite;
-    sf::Texture texture;
-    sf::Image *cell;
+    sf::Sprite spr;                                 // Sprajt ;)
+    sf::Texture *normalTex,                         // Zwykła textura
+                *checkeredTex;                      // Textura w kratke
+
+    bool checked;                                   // Jeśli prawda używana jest kratkowana textura
+    const sf::Vector2u checkeredCellSiz;            // Rozmiary pola kratkowanej textury
+
+    sf::Vector2u sprSiz,                            // Rozmiar sprajta
+                 mapSiz;                            // Ilość komórek mapy
+
+    sf::Rect<int> mapPos;                           // Wyświetlany obszar
 };
 
 #endif // BoardView_hpp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
