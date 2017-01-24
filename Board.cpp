@@ -62,11 +62,20 @@ void Board::resize(const sf::Vector2u &new_size, const sf::Vector2i &current_map
     data = new_data;
     data_size = new_size;
 
-    /* Zmiana rozmiaru zachodzi później, konieczne dwukrotne usunięcie i umieszczenie oryginału */
+    /* Zmiana rozmiaru zachodzi później i mrówka nieprzypisana przez użytkownika może pojawić się na planszy,
+     * konieczne kolejne usunięcie */
     removeAnt();
 
-    if (had_ant)
-        placeAnt(ant_copy);
+    /* Przesuwam mrówkę razem z planszą */
+    if (had_ant) {
+        int x = (int) ant_copy.getPosition().x + current_map_point.x;
+        int y = (int) ant_copy.getPosition().y + current_map_point.y;
+
+        if (x > -1 && y > -1) {
+            ant_copy.setPosition(sf::Vector2u((unsigned int) x, (unsigned int) y));
+            placeAnt(ant_copy);
+        }
+    }
 }
 
 void Board::clear()
