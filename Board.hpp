@@ -26,9 +26,9 @@ public:
     ~Board();
 
     /* Zmienia rozmiar planszy, odpowiednio ją pomniejszając lub powiększając.
-     * Jeżeli zmiana powoduje zwiększenie planszy, nowe pola zostaną zainicjalizowane kolorem (id) o wartości getNewCellColor().
-     * Dodatkowy argument określa punkt, w jakim aktualne dane planszy zostaną umiejscowione po zmianie jej rozmiaru (w nowej planszy).
-     * W niektórych sytuacjach może to spowodować utratę informacji lub mrówki.
+     * Dodatkowy argument określa opcjonalny wektor przesunięcia obecnej planszy oraz mrówki.
+     * Jeżeli zmiana powoduje powiększenie planszy, nowe pola zostaną zainicjalizowane ID koloru z getNewCellColor().
+     * Dane (lub mrówka) wykraczające poza planszę zostaną pominięte.
      */
     void resize(const sf::Vector2u &new_size, const sf::Vector2i &current_map_point = sf::Vector2i());
 
