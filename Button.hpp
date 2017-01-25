@@ -81,9 +81,7 @@ public:
 
     sf::Texture     getTex()        {return texture;}
 
-    sf::Vector2f    getSiz()        {return size;}
-
-    sf::Vector2f    getPos()        {return position;}
+    sf::FloatRect   getRec()        {return area;}
 
     sf::Font        getFon()        {return font;}
 
@@ -116,8 +114,7 @@ private:
     short marginLeft;
     float textScale;
 
-    sf::Vector2f position;
-    sf::Vector2f size;
+    sf::FloatRect area;
 
     bool hover;
     bool broken;

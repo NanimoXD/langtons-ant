@@ -1,9 +1,5 @@
 #include "OptMgr.hpp"
 
-#include "MainWin.hpp"
-
-#include <cstdio>
-
 OptMgr::OptMgr(MainWin &_mainWin):
     mainWin      (_mainWin)
 {
@@ -29,37 +25,32 @@ OptMgr::OptMgr(MainWin &_mainWin):
                                                      */
 }
 
-int OptMgr::main()
+MgrRet OptMgr::main()
 {
-    int ret = 0;
+    MgrRet ret;
 
     while(mainWin.window->pollEvent(event))
     {
         if(event.type == sf::Event::Closed)
-            ret = -1;
+            ret.close = true;
         else if(event.type == sf::Event::Resized)
         {
-            sf::FloatRect view(0, 0, event.size.width, event.size.height);
-
-            if(view.width < 800) mainWin.window->setSize(sf::Vector2u(800, view.height));
-            if(view.height < 600) mainWin.window->setSize(sf::Vector2u(view.width, 600));
-
-            mainWin.window->setView(sf::View(view));
-            placeButtons();
+            mainWin.newWin(sf::Vector2u(event.size.width, event.size.height));
+            ret.resize = true;
         }
         else if(event.type == sf::Event::LostFocus)
         {
             do
             {
                 if(!mainWin.window->pollEvent(event))
-                    sf::sleep(sf::milliseconds(500));
+                    sf::sleep(sf::milliseconds(100));
             }while(event.type != sf::Event::GainedFocus);
 
         }
         else if(event.type == sf::Event::KeyPressed)
         {
             if(event.key.code == sf::Keyboard::Escape)
-                ret = 19;
+                ret.close = true;
         }
     }
 
@@ -67,12 +58,12 @@ int OptMgr::main()
 
     for(int i = 0; i < amount; ++i)     // Przyciski od 1 do 19
         if(button[i].button())
-            ret = (i + 1) * 10;
+            ret.id = (i + 1) * 10;
 
     mainWin.window->display();
     mainWin.window->clear(sf::Color(128, 128, 128));
 
-    if(ret) printf("OptMgr: %2i\t", ret);
+    if(ret.id) printf("OptMgr: %2i\t", ret.id);
 
     return ret;
 }

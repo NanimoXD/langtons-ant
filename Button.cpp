@@ -13,8 +13,7 @@ Button::Button():
     textID          (1),
     marginLeft      (20),
     textScale       (0.3),
-    position        (sf::Vector2f(0, 0)),
-    size            (sf::Vector2f(0, 0)),
+    area            (0, 0, 0, 0),
     hover           (false),
     broken          (false),
     pressed         (false),
@@ -27,8 +26,7 @@ Button::Button(sf::RenderWindow &win, sf::Vector2f pos, sf::Vector2f siz, std::s
     textID          (1),
     marginLeft      (20),
     textScale       (0.3),
-    position        (pos),
-    size            (siz),
+    area            (pos, siz),
     hover           (false),
     broken          (false),
     pressed         (false),
@@ -42,8 +40,7 @@ Button::Button(sf::RenderWindow &win, float posx, float posy, float sizx, float 
     textID          (1),
     marginLeft      (20),
     textScale       (0.3),
-    position        (sf::Vector2f(posx, posy)),
-    size            (sf::Vector2f(sizx, sizy)),
+    area            (posx, posy, sizx, sizy),
     hover           (false),
     broken          (false),
     pressed         (false),
@@ -59,10 +56,9 @@ short Button::button()
 
     short ret = 0;
 
-    sf::Vector2i mousePosition(window->mapCoordsToPixel((sf::Vector2f)sf::Mouse::getPosition(*window)));
+    sf::Vector2f mousePosition(window->mapCoordsToPixel((sf::Vector2f)sf::Mouse::getPosition(*window)));
 
-    if(mousePosition.x > position.x && mousePosition.x < position.x + size.x &&
-       mousePosition.y > position.y && mousePosition.y < position.y + size.y)
+    if(area.contains(mousePosition))
     {
         if(!hover)
         {
@@ -152,25 +148,29 @@ bool Button::setTex(sf::String tex)
 
 void Button::setSiz(sf::Vector2f siz)
 {
-    size = siz;
+    area.width = siz.x;
+    area.height = siz.y;
     updateSprite();
 }
 
 void Button::setSiz(float x, float y)
 {
-    size = sf::Vector2f(x, y);
+    area.width = x;
+    area.height = y;
     updateSprite();
 }
 
 void Button::setPos(sf::Vector2f pos)
 {
-    position = pos;
+    area.left = pos.x;
+    area.top = pos.y;
     updateSprite();
 }
 
 void Button::setPos(float x, float y)
 {
-    position = sf::Vector2f(x, y);
+    area.left = x;
+    area.top = y;
     updateSprite();
 }
 
@@ -303,8 +303,8 @@ void Button::setWin(sf::RenderWindow &win)
 
 void Button::constructor()
 {
-    setPos(position);
-    setSiz(size);
+    setPos(area.left, area.top);
+    setSiz(area.width, area.height);
     setDefCol(defaultColor);
     setHovCol(hoverColor);
     setActCol(activeColor);
@@ -317,12 +317,12 @@ void Button::constructor()
 
 void Button::updateSprite()
 {
-    text.setCharacterSize(size.y * textScale);
-    text.setOrigin(-marginLeft, size.y * textScale / 2);
-    text.setPosition(position.x, position.y + size.y / 2);
+    text.setCharacterSize(area.height * textScale);
+    text.setOrigin(-marginLeft, area.height * textScale / 2);
+    text.setPosition(area.left, area.top + area.height / 2);
 
-    sprite.setScale(size.x / texture.getSize().x, size.y / texture.getSize().y);
-    sprite.setPosition(position);
+    sprite.setScale(area.width / texture.getSize().x, area.height / texture.getSize().y);
+    sprite.setPosition(area.left, area.top);
 }
 
 #undef textureSource

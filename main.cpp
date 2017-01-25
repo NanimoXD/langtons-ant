@@ -12,22 +12,23 @@ void options(MainWin &mainWin)
     {
         Fps()();
 
-        switch(optMgr.main())
-        {
-        case -1:
+        MgrRet ret = optMgr.main();
+
+        if(ret.close)
             mainWin.window->close();
-            break;
+
+        if(ret.resize)
+            optMgr.placeButtons();
+
+        switch(ret.id)
+        {
         case 10:
             if(!mainWin.isFullscreen())
-            {
                 mainWin.newWin(sf::Vector2u(), true);
-                optMgr.placeButtons();
-            }
             else
-            {
                 mainWin.newWin(sf::Vector2u(800, 600), false);
-                optMgr.placeButtons();
-            }
+
+            optMgr.placeButtons();
             break;
         case 190:
             return;
@@ -43,10 +44,10 @@ int main()
     MainMgr mainMgr(mainWin);
 
     BoardView boardView;
-
-    boardView.setSprPos(sf::Vector2f(mainWin.window->getSize().x * 0.99, mainWin.window->getSize().y * 0.98));
-
-    boardView.setCol(sf::Vector2u(5, 10), sf::Color(255, 0, 0));
+    boardView.setMapSiz(sf::Vector2u(100, 100));
+    boardView.setCol(sf::Vector2u(1, 1), sf::Color(255, 0, 0));
+    boardView.setView(sf::IntRect(0, 0, boardView.getMapSiz().x, boardView.getMapSiz().y));
+    boardView.setWin(mainWin.window);
 
     while(mainWin.window->isOpen())
     {
@@ -54,13 +55,22 @@ int main()
 
         boardView.draw();
 
-        switch(mainMgr.main())
-        {
-        case -1:
+        MgrRet ret = mainMgr.main();
+
+        if(ret.close)
             mainWin.window->close();
-            break;
+
+        if(ret.resize)
+        {
+            boardView.update();
+            mainMgr.placeButtons();
+        }
+
+        switch(ret.id)
+        {
         case 20:
             options(mainWin);
+            boardView.update();
             mainMgr.placeButtons();
             break;
         }

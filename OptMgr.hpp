@@ -3,14 +3,16 @@
 
 #include "MainWin.hpp"
 #include "Button.hpp"
+#include "MgrRet.hpp"
+
+#include <cstdio>
 
 class OptMgr
 {
 public:
     OptMgr(MainWin &mainWin);                       // Konstruktor
 
-    int main();                                     /*  Główna funkcja:
-                                                     *  -1) Wyjście
+    MgrRet main();                                  /*  Główna funkcja:
                                                      *  00) Nic
                                                      *  10) Pełny ekran
                                                      *  20) Przycisk 2

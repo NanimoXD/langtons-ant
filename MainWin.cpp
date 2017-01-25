@@ -7,12 +7,12 @@ MainWin::MainWin(sf::Vector2u winSiz, bool _fullscreen):
     newWin(winSiz, _fullscreen);
 }
 
-void MainWin::newWin(sf::Vector2u winSize, bool _fullscreen)
+void MainWin::newWin(sf::Vector2u winSiz, bool _fullscreen)
 {
-    if(winSize == sf::Vector2u())
+    if(winSiz == sf::Vector2u())
     {
-        winSize.x = sf::VideoMode::getDesktopMode().width;
-        winSize.y = sf::VideoMode::getDesktopMode().height;
+        winSiz.x = sf::VideoMode::getDesktopMode().width;
+        winSiz.y = sf::VideoMode::getDesktopMode().height;
     }
 
     if(fullscreen != _fullscreen)
@@ -21,7 +21,7 @@ void MainWin::newWin(sf::Vector2u winSize, bool _fullscreen)
 
         if(window->isOpen()) window->close();
 
-        window->create(sf::VideoMode(winSize.x, winSize.y, sf::VideoMode::getDesktopMode().bitsPerPixel), "Ant XD", 7 + fullscreen);
+        window->create(sf::VideoMode(winSiz.x, winSiz.y, sf::VideoMode::getDesktopMode().bitsPerPixel), "Ant XD", 7 + fullscreen);
         window->setFramerateLimit(60);
         window->clear(sf::Color::Black);
         window->display();
@@ -37,7 +37,7 @@ void MainWin::newWin(sf::Vector2u winSize, bool _fullscreen)
     }
     else
     {
-        sf::FloatRect view(0, 0, winSize.x, winSize.y);
+        sf::FloatRect view(0, 0, winSiz.x, winSiz.y);
 
         if(view.width < 800) window->setSize(sf::Vector2u(800, view.height));
         if(view.height < 600) window->setSize(sf::Vector2u(view.width, 600));

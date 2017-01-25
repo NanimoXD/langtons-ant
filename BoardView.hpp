@@ -6,37 +6,46 @@
 class BoardView
 {
 public:
-    BoardView();                                    // Konstruktor
+    BoardView();                                        // Konstruktor
 
-    void draw();                                    // Rysuje mape na scenie
+    void draw();                                        // Rysuje mape na scenie
 
-    void setCol(sf::Vector2u pos, sf::Color color); // Zmienia kolor w danym polu,
-                                                    // jeżli wykroczy poza zakres nie zrobi nic :p
+    void setCol(sf::Vector2u pos, sf::Color color);     // Zmienia kolor w danym polu,
+                                                        // jeżli wykroczy poza zakres nie zrobi nic :p
 
-    void setSprPos(sf::Vector2f pos);               // Zmienia pozycje sprita w oknie
+    void update();                                      // Ustawia wielkość i ustawia mape w odpowiednim miejscu :p
 
-    void setSprSiz(sf::Vector2u siz);               // Zmienia rozmiar textury w pixelach
+    void setMapSiz(sf::Vector2u siz);                   // Zmienia rozmiar textury
 
-    void setMapPos(sf::Vector2u pos);               // Zmienia pozycje mapy w sprajcie
+    bool setView(sf::IntRect pos);                      // Zmienia pozycje mapy w sprajcie
 
-    void setMapSiz(sf::Vector2u siz);               // Zmienia ilość wyświetlanych pól
+    void setDefCol(sf::Color col);                      // Zmienia domyślny kolor nowych pól
 
-    void setWin(sf::RenderWindow *win);             // Ustawia okno
+    void setWin(sf::RenderWindow *win);                 // Ustawia okno
+
+    // Pobieranie ustawień
+    // -------------------------------------------------
+
+    sf::Vector2u    getMapSiz()     {return tex->getSize();}
+
+    sf::IntRect     getView()       {return area;}
+
+    sf::Color       getDefCol()     {return defCol;}
 
 private:
-    sf::RenderWindow *window;                       // Okno :D
+    sf::RenderWindow *window;                           // Okno :D
 
-    sf::Sprite spr;                                 // Sprajt ;)
-    sf::Texture *normalTex,                         // Zwykła textura
-                *checkeredTex;                      // Textura w kratke
+    sf::Sprite spr;                                     // Sprajt mapy ;)
+    sf::Texture *tex;                                   // Textura mapy
 
-    bool checked;                                   // Jeśli prawda używana jest kratkowana textura
-    const sf::Vector2u checkeredCellSiz;            // Rozmiary pola kratkowanej textury
+    sf::Vector2f sprSiz;                                // Rozmiar sprajta
 
-    sf::Vector2u sprSiz,                            // Rozmiar sprajta
-                 mapSiz;                            // Ilość komórek mapy
+    sf::IntRect area;                                   // Wyświetlany obszar
 
-    sf::Rect<int> mapPos;                           // Wyświetlany obszar
+    sf::Color defCol;                                   // Domyślny kolor nowych pól
+
+    sf::Sprite bgSprite;                                // Podkładka pod sprajta która tak naprawde jest ramką
+    sf::Texture bgTexture;                              // Textura do background XD
 };
 
 #endif // BoardView_hpp

@@ -1,7 +1,5 @@
 #include "MainMgr.hpp"
 
-#include <cstdio>
-
 MainMgr::MainMgr(MainWin &_mainWin):
     mainWin      (_mainWin)
 {
@@ -13,32 +11,32 @@ MainMgr::MainMgr(MainWin &_mainWin):
                                  */
 }
 
-int MainMgr::main()
+MgrRet MainMgr::main()
 {
-    int ret = 0;
+    MgrRet ret;
 
     while(mainWin.window->pollEvent(event))
     {
         if(event.type == sf::Event::Closed)
-            ret = -1;
+            ret.close = true;
         else if(event.type == sf::Event::Resized)
         {
             mainWin.newWin(sf::Vector2u(event.size.width, event.size.height));
-            placeButtons();
+            ret.resize = true;
         }
         else if(event.type == sf::Event::LostFocus)
         {
             do
             {
                 if(!mainWin.window->pollEvent(event))
-                    sf::sleep(sf::milliseconds(500));
+                    sf::sleep(sf::milliseconds(100));
             }while(event.type != sf::Event::GainedFocus);
 
         }
         else if(event.type == sf::Event::KeyPressed)
         {
             if(event.key.code == sf::Keyboard::Escape)
-                ret = -1;
+                ret.close = true;
         }
     }
 
@@ -47,22 +45,22 @@ int MainMgr::main()
     switch(button[0].button())  // Start / Stop
     {
     case 1:
-        ret = 10;
+        ret.id = 10;
         break;
     case 2:
-        ret = 11;
+        ret.id = 11;
         break;
     }
 
-    if(button[1].button()) ret = 20;    // Opcje
-    if(button[2].button()) ret = 30;    // <
-    if(button[3].button()) ret = 40;    // >
-    if(button[4].button()) ret = -1;    // Wyjście
+    if(button[1].button()) ret.id = 20;         // Opcje
+    if(button[2].button()) ret.id = 30;         // <
+    if(button[3].button()) ret.id = 40;         // >
+    if(button[4].button()) ret.close = true;    // Wyjście
 
     mainWin.window->display();
     mainWin.window->clear(sf::Color(128, 128, 128));
 
-    if(ret) printf("MainMgr: %2i\t", ret);
+    if(ret.id) printf("MainMgr: %2i\t", ret.id);
 
     return ret;
 }

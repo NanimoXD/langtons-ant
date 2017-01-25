@@ -3,14 +3,16 @@
 
 #include "MainWin.hpp"
 #include "Button.hpp"
+#include "MgrRet.hpp"
+
+#include <cstdio>
 
 class MainMgr
 {
 public:
     MainMgr(MainWin &_mainWin);                     // Konstruktor
 
-    int main();                                     /*  Główna funkcja:
-                                                     *  -1) Wyjście
+    MgrRet main();                                  /*  Główna funkcja:
                                                      *  00) Nic
                                                      *  10) Start
                                                      *  11) Stop
