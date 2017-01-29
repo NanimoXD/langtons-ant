@@ -4,6 +4,8 @@
 #include "BoardView.hpp"
 #include "Fps.hpp"
 
+#include <cstdlib>
+
 void options(MainWin &mainWin)
 {
     OptMgr optMgr(mainWin);
@@ -39,15 +41,16 @@ void options(MainWin &mainWin)
 int main()
 {
     setlocale(LC_ALL, "");
+    srand(time(0));
 
     MainWin mainWin(sf::Vector2u(800, 600));
     MainMgr mainMgr(mainWin);
 
     BoardView boardView;
-    boardView.setMapSiz(sf::Vector2u(100, 100));
-    boardView.setCol(sf::Vector2u(1, 1), sf::Color(255, 0, 0));
-    boardView.setView(sf::IntRect(0, 0, boardView.getMapSiz().x, boardView.getMapSiz().y));
     boardView.setWin(mainWin.window);
+    boardView.addArea(1000, Direction::Right);
+    boardView.addArea(1000, Direction::Down);
+    boardView.setView(sf::IntRect(0, 0, boardView.getMapSiz().x, boardView.getMapSiz().y));
 
     while(mainWin.window->isOpen())
     {
@@ -68,6 +71,20 @@ int main()
 
         switch(ret.id)
         {
+        case 10:
+            for(int i = 0; i < 1000; ++i)
+            {
+                for(int j = 0; j < 1000; j++)
+                    boardView.setCol(sf::Vector2u(i, j), sf::Color(rand() % 255, rand() % 255, rand() % 255));
+            }
+            break;
+        case 11:
+            for(int i = 0; i < 1000; ++i)
+            {
+                for(int j = 0; j < 1000; j++)
+                    boardView.setCol(sf::Vector2u(i, j), boardView.getDefCol());
+            }
+            break;
         case 20:
             options(mainWin);
             boardView.update();
@@ -75,6 +92,8 @@ int main()
             break;
         }
     }
+
+    printf("Lol no witam XD");
 
     return EXIT_SUCCESS;
 }

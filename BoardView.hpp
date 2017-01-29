@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Direction.hpp"
+
 class BoardView
 {
 public:
@@ -15,7 +17,7 @@ public:
 
     void update();                                      // Ustawia wielkość i ustawia mape w odpowiednim miejscu :p
 
-    void setMapSiz(sf::Vector2u siz);                   // Zmienia rozmiar textury
+    void addArea(uint16_t extend, Direction dir);       // Zmienia rozmiar textury
 
     bool setView(sf::IntRect pos);                      // Zmienia pozycje mapy w sprajcie
 
@@ -26,7 +28,7 @@ public:
     // Pobieranie ustawień
     // -------------------------------------------------
 
-    sf::Vector2u    getMapSiz()     {return tex->getSize();}
+    sf::Vector2u    getMapSiz()     {return tex.getSize();}
 
     sf::IntRect     getView()       {return area;}
 
@@ -36,7 +38,8 @@ private:
     sf::RenderWindow *window;                           // Okno :D
 
     sf::Sprite spr;                                     // Sprajt mapy ;)
-    sf::Texture *tex;                                   // Textura mapy
+    sf::Texture tex;                                    // Textura mapy
+    sf::Image cell;                                     // Jedno pole
 
     sf::Vector2f sprSiz;                                // Rozmiar sprajta
 

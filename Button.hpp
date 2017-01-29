@@ -13,10 +13,8 @@ public:
     Button(sf::RenderWindow &win, sf::Vector2f pos = sf::Vector2f(0, 0), sf::Vector2f siz = sf::Vector2f(0, 0), std::string str = "");
     Button(sf::RenderWindow &win, float posx = 0, float posy = 0, float sizx = 0, float sizy = 0, std::string str = "");
 
-    // Rysuje przycisk i zwraca prawde jeśli przycisk został aktywowany :D :p
+    // Rysuje przycisk, zwraca numer opcji przycisku jeśli został przyciśnięty :D :p
     short button();
-
-    // Już też zrobie po kilka bo nie moge być gorszy XD
 
     // Ustawia texture i skaluje ją do rozmiarów przycisku
     // Niestety da sie ustawić tylko raz do czasu wywołania button()

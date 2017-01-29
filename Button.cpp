@@ -204,7 +204,7 @@ void Button::addStr(sf::String txt)
     if(strings.empty())
         text.setString(txt);
 
-    for(sf::Uint8 rep_ID = textID; rep_ID <= strings.size(); ++rep_ID)
+    for(uint8_t i = textID; i <= strings.size(); ++i)
     {
         strings.push(strings.front());
         strings.pop();
@@ -212,7 +212,7 @@ void Button::addStr(sf::String txt)
 
     strings.push(txt);
 
-    for(sf::Uint8  i = 1; i < textID; ++i)
+    for(uint8_t  i = 1; i < textID; ++i)
     {
         strings.push(strings.front());
         strings.pop();
