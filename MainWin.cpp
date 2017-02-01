@@ -19,8 +19,6 @@ void MainWin::newWin(sf::Vector2u winSiz, bool _fullscreen)
     {
         fullscreen = !fullscreen;
 
-        if(window->isOpen()) window->close();
-
         window->create(sf::VideoMode(winSiz.x, winSiz.y, sf::VideoMode::getDesktopMode().bitsPerPixel), "Ant XD", 7 + fullscreen);
         window->setFramerateLimit(60);
         window->clear(sf::Color::Black);

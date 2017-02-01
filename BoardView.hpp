@@ -10,16 +10,22 @@ class BoardView
 public:
     BoardView();                                        // Konstruktor
 
+    void newBoard();                                    // Tworzy nową mape (wywoływne przez konstruktor)
+
     void draw();                                        // Rysuje mape na scenie
 
-    void setCol(sf::Vector2u pos, sf::Color color);     // Zmienia kolor w danym polu,
+    bool setCol(sf::Vector2u pos, sf::Color color);     // Zmienia kolor w danym polu,
                                                         // jeżli wykroczy poza zakres nie zrobi nic :p
 
     void update();                                      // Ustawia wielkość i ustawia mape w odpowiednim miejscu :p
 
     void addArea(uint16_t extend, Direction dir);       // Zmienia rozmiar textury
 
-    bool setView(sf::IntRect pos);                      // Zmienia pozycje mapy w sprajcie
+    void setCenter(sf::Vector2i pos);                   // Zmienia pozycje środka widoku
+
+    void setViewSiz(sf::Vector2i siz);                  // Zmienia pozycje mapy w sprajcie
+
+    void setViewScl(float scl);                         // Ustawia skale przybliżenia
 
     void setDefCol(sf::Color col);                      // Zmienia domyślny kolor nowych pól
 
@@ -28,9 +34,13 @@ public:
     // Pobieranie ustawień
     // -------------------------------------------------
 
-    sf::Vector2u    getMapSiz()     {return tex.getSize();}
+    sf::Vector2i    getSiz()        {return (sf::Vector2i)tex.getSize();}
 
-    sf::IntRect     getView()       {return area;}
+    sf::Vector2i    getCenter()     {return center;}
+
+    sf::Vector2i    getViewSiz()    {return sf::Vector2i(area.width, area.height);}
+
+    float           getViewScl()    {return viewScl;}
 
     sf::Color       getDefCol()     {return defCol;}
 
@@ -41,9 +51,9 @@ private:
     sf::Texture tex;                                    // Textura mapy
     sf::Image cell;                                     // Jedno pole
 
-    sf::Vector2f sprSiz;                                // Rozmiar sprajta
-
+    sf::Vector2i center;                                // Środek wyświetlanego obrazu
     sf::IntRect area;                                   // Wyświetlany obszar
+    float viewScl;                                      // Skala przybliżenia
 
     sf::Color defCol;                                   // Domyślny kolor nowych pól
 

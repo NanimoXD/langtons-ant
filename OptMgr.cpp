@@ -42,8 +42,7 @@ MgrRet OptMgr::main()
         {
             do
             {
-                if(!mainWin.window->pollEvent(event))
-                    sf::sleep(sf::milliseconds(100));
+                if(!mainWin.window->waitEvent(event));
             }while(event.type != sf::Event::GainedFocus);
 
         }
@@ -59,11 +58,6 @@ MgrRet OptMgr::main()
     for(int i = 0; i < amount; ++i)     // Przyciski od 1 do 19
         if(button[i].button())
             ret.id = (i + 1) * 10;
-
-    mainWin.window->display();
-    mainWin.window->clear(sf::Color(128, 128, 128));
-
-    if(ret.id) printf("OptMgr: %2i\t", ret.id);
 
     return ret;
 }
