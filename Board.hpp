@@ -21,7 +21,10 @@ public:
     Board();
 
     /* Konstruuje planszę o wskazanym rozmiarze, z polami zainicjowanymi na przekazany kolor. Przypisuje ten kolor jako domyślny */
-    Board(const sf::Vector2u &size, FieldColorId color_id);
+    Board(const sf::Vector2u &size, FieldColorId color_id = 0);
+
+    /* Konstruuje kopię planszy */
+    Board(const Board &b);
 
     ~Board();
 
@@ -69,10 +72,13 @@ public:
     void setAntPosition(const sf::Vector2u &position);
     void setAntDirection(Direction dir);
 
+    Board & operator=(const Board &b);
+
+    /* Wymienia dane plansz. Obiekt wywołujący otrzymuje dane parametru, a temu z kolei przypisuje się dane obiektu */
+    void swap(Board &b);
+
 private:
-    /* Blokuję kopiowanie obiektów, na razie nie potrzebna funkcjonalność */
-    Board(const Board &) = delete;
-    Board & operator=(const Board &) = delete;
+    void copyData(const Board &b);
 
     FieldColorId **data;
     sf::Vector2u data_size;
