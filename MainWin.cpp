@@ -24,14 +24,11 @@ void MainWin::newWin(sf::Vector2u winSiz, bool _fullscreen)
         window->clear(sf::Color::Black);
         window->display();
 
-        /* Przynajmniej do czasu naprawienia błędu #1168 (https://github.com/SFML/SFML/issues/1168) */
-        #ifndef SFML_SYSTEM_LINUX
-            sf::Image *icon = new sf::Image;
+        sf::Image *icon = new sf::Image;
 
-            if(icon->loadFromFile("Images/icon.png"))
-                window->setIcon(icon->getSize().x, icon->getSize().y, icon->getPixelsPtr());
-            delete icon;
-        #endif
+        if(icon->loadFromFile("Images/icon.png"))
+            window->setIcon(icon->getSize().x, icon->getSize().y, icon->getPixelsPtr());
+        delete icon;
     }
     else
     {
