@@ -1,4 +1,5 @@
 #include "Board.hpp"
+#include <utility>
 
 
 Board::Board()
@@ -10,6 +11,13 @@ Board::Board(const sf::Vector2u &size, FieldColorId color_id)
       new_field_color(color_id)
 {
     resize(size);
+}
+
+Board::Board(const Board &b)
+    : Board(b.size(), b.new_field_color)
+{
+    copyData(b);
+    ant = b.ant;
 }
 
 Board::~Board()
@@ -123,4 +131,35 @@ void Board::setAntDirection(Direction dir)
     Ant ant_new = hasAnt() ? ant : Ant();
     ant_new.setDirection(dir);
     placeAnt(ant_new);
+}
+
+Board & Board::operator=(const Board &b)
+{
+    clear();
+    resize(b.size());
+    copyData(b);
+    new_field_color = b.new_field_color;
+    ant = b.ant;
+    return *this;
+}
+
+void Board::swap(Board &b)
+{
+    std::swap(data, b.data);
+    std::swap(data_size, b.data_size);
+    std::swap(new_field_color, b.new_field_color);
+    std::swap(ant, b.ant);
+}
+
+void Board::copyData(const Board &b)
+{
+    sf::Vector2u point;
+
+    for (; point.y < b.height(); ++point.y) {
+        point.x = 0;
+
+        for (; point.x < b.width(); ++point.x) {
+            setFieldColor(point, b.getFieldColor(point));
+        }
+    }
 }
