@@ -56,8 +56,13 @@ MgrRet OptMgr::main()
     // Przyciski ---------------------------------------
 
     for(int i = 0; i < amount; ++i)     // Przyciski od 1 do 19
+    {
+        if(i >= 1 && i <= 5)
+            continue;
+
         if(button[i].button())
             ret.id = (i + 1) * 10;
+    }
 
     return ret;
 }
@@ -117,18 +122,26 @@ void OptMgr::setupButtons()
     button[3].addStr("Przycisk 4");
     button[4].addStr("Przycisk 5");
     button[5].addStr("Przycisk 6");
-    button[6].addStr("Przycisk 7");
-    button[7].addStr("Przycisk 8");
-    button[8].addStr("Przycisk 9");
-    button[9].addStr("Przycisk 10");
-    button[10].addStr("Przycisk 11");
-    button[11].addStr("Przycisk 12");
-    button[12].addStr("Przycisk 13");
-    button[13].addStr("Przycisk 14");
-    button[14].addStr("Przycisk 15");
-    button[15].addStr("Przycisk 16");
-    button[16].addStr("Przycisk 17");
-    button[17].addStr("Przycisk 18");
+
+    button[6].addStr("Brak");
+    button[6].addStr(L"Biały");
+    button[6].addStr("Czerwony");
+    button[6].addStr(L"Żółty");
+    button[6].addStr("Zielony");
+    button[6].addStr("Niebieski");
+    button[6].addStr("Fioletowy");
+
+    for(int i = 7; i < 12; ++i)
+        button[i] = button[6];
+
+    button[12].addStr("Prawo");
+    button[12].addStr("Lewo");
+    button[12].addStr("Prosto");
+    button[12].addStr("W tył");
+
+    for(int i = 13; i < 18; ++i)
+        button[i] = button[12];
+
     button[18].addStr(L"Powrót");
 
     // Pozycjonowanie przycisków

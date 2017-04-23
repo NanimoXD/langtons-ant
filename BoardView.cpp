@@ -48,7 +48,7 @@ bool BoardView::setCol(sf::Vector2u pos, sf::Color color)
 
 void BoardView::update()
 {
-    if(spr.getTexture() == NULL || window == nullptr)
+    if(window == nullptr)
         return;
 
     spr.setPosition(sf::Vector2f((float)window->getSize().x * 0.01 + 5, (float)window->getSize().y * 0.02 + 5));
@@ -58,7 +58,7 @@ void BoardView::update()
     bgSprite.setScale((float)window->getSize().x * 0.96 - 200, (float)window->getSize().y * 0.92 - 75);
 }
 
-void BoardView::addArea(uint16_t extend, Direction dir)
+void BoardView::addArea(uint16_t extend, Direction2 dir)
 {
     sf::Vector2u siz = tex.getSize();
     sf::Image qubby = tex.copyToImage(),
@@ -66,12 +66,12 @@ void BoardView::addArea(uint16_t extend, Direction dir)
 
     switch(dir)
     {
-    case Direction::Left:
-    case Direction::Right:
+    case Direction2::Left:
+    case Direction2::Right:
         siz.x += extend;
         break;
-    case Direction::Up:
-    case Direction::Down:
+    case Direction2::Up:
+    case Direction2::Down:
         siz.y += extend;
         break;
     }
@@ -83,14 +83,14 @@ void BoardView::addArea(uint16_t extend, Direction dir)
 
     switch(dir)
     {
-    case Direction::Up:
+    case Direction2::Up:
         tex.update(qubby, 0, extend);
         break;
-    case Direction::Left:
+    case Direction2::Left:
         tex.update(qubby, extend, 0);
         break;
-    case Direction::Right:
-    case Direction::Down:
+    case Direction2::Right:
+    case Direction2::Down:
         tex.update(qubby);
         break;
     }
@@ -100,7 +100,7 @@ void BoardView::addArea(uint16_t extend, Direction dir)
 
 void BoardView::setCenter(sf::Vector2i pos)
 {
-    if(pos != sf::Vector2i())
+    if(pos != center)
     {
         if(pos.x > (signed)tex.getSize().x - 1) pos.x = (signed)tex.getSize().x - 1;
         else if(pos.x < 0) pos.x = 0;
@@ -122,18 +122,21 @@ void BoardView::setCenter(sf::Vector2i pos)
     spr.setTextureRect(area);
 }
 
-void BoardView::setViewSiz(sf::Vector2i siz)
+void BoardView::setViewSiz(sf::Vector2u siz)
 {
-    area.width = siz.x + 1 - siz.x % 2;
-    area.height = siz.y + 1 - siz.x % 2;
+    siz.x += 1 - siz.x % 2;
+    siz.y += 1 - siz.x % 2;
 
-    if(area.width > (signed)tex.getSize().x) area.width = (signed)tex.getSize().x;
-    else if(area.width < 5) area.width = 5;
+    if(siz.x > tex.getSize().x) siz.x = tex.getSize().x;
+    else if(siz.x < 5) siz.x = 5;
 
-    if(area.height > (signed)tex.getSize().y) area.height = (signed)tex.getSize().y;
-    else if(area.height < 5) area.height = 5;
+    if(siz.y > tex.getSize().y) siz.y = tex.getSize().y;
+    else if(siz.y < 5) siz.y = 5;
 
-    setCenter(sf::Vector2i());
+    area.width = siz.x;
+    area.height = siz.y;
+
+    setCenter(center);
     update();
 }
 
@@ -144,7 +147,7 @@ void BoardView::setViewScl(float scl)
 
     viewScl = scl;
 
-    setViewSiz(sf::Vector2i(tex.getSize().x * viewScl, tex.getSize().y * viewScl));
+    setViewSiz(sf::Vector2u(tex.getSize().x * viewScl, tex.getSize().y * viewScl));
 }
 
 void BoardView::setDefCol(sf::Color col)

@@ -66,8 +66,8 @@ void MainMgr::setupButtons()
     button[0].addStr("Start");
     button[0].addStr("Stop");
     button[1].addStr("Opcje");
-    button[2].addStr("<");
-    button[3].addStr(">");
+    button[2].addStr("+");
+    button[3].addStr("-");
     button[4].addStr(L"Wyjście");
 
     // Dodatkowe ustawienia 2) "<" i 3) ">"

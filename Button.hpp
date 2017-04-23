@@ -27,7 +27,7 @@ public:
     void setSiz(sf::Vector2f siz);
     void setSiz(float x, float y);
 
-    // Ustawia nową pozycje lewego górnego rogu
+    // Ustawia nową pozycje przycisku
     void setPos(sf::Vector2f pos);
     void setPos(float x, float y);
 

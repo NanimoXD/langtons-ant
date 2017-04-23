@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Direction.hpp"
+#include "Direction2.hpp"
 
 class BoardView
 {
@@ -19,11 +19,11 @@ public:
 
     void update();                                      // Ustawia wielkość i ustawia mape w odpowiednim miejscu :p
 
-    void addArea(uint16_t extend, Direction dir);       // Zmienia rozmiar textury
+    void addArea(uint16_t extend, Direction2 dir);       // Zmienia rozmiar textury
 
     void setCenter(sf::Vector2i pos);                   // Zmienia pozycje środka widoku
 
-    void setViewSiz(sf::Vector2i siz);                  // Zmienia pozycje mapy w sprajcie
+    void setViewSiz(sf::Vector2u siz);                  // Zmienia pozycje mapy w sprajcie
 
     void setViewScl(float scl);                         // Ustawia skale przybliżenia
 
@@ -34,11 +34,11 @@ public:
     // Pobieranie ustawień
     // -------------------------------------------------
 
-    sf::Vector2i    getSiz()        {return (sf::Vector2i)tex.getSize();}
+    sf::Vector2u    getSiz()        {return tex.getSize();}
 
     sf::Vector2i    getCenter()     {return center;}
 
-    sf::Vector2i    getViewSiz()    {return sf::Vector2i(area.width, area.height);}
+    sf::Vector2u    getViewSiz()    {return sf::Vector2u(area.width, area.height);}
 
     float           getViewScl()    {return viewScl;}
 
