@@ -74,14 +74,17 @@ int main()
     BoardView boardView;
     boardView.addArea(21, Direction2::Right);
     boardView.addArea(21, Direction2::Down);
-    boardView.setCenter(sf::Vector2i(ant.getPos().x, ant.getPos().y));
     boardView.setWin(mainWin.window);
     boardView.setViewSiz(boardView.getSiz());
-    boardView.setCol((sf::Vector2u)boardView.getCenter(), sf::Color(0, 0, 0));
+    boardView.setCol(ant.getPos(), sf::Color(0, 0, 0));
 
     sf::Clock antClock;
     bool antMove = false;
-    int antSpeed = 50;
+    uint32_t antSpeed = 1;
+    uint32_t antStep = 0;
+
+    mainMgr.setSpeed(antSpeed);
+    mainMgr.setStep(antStep);
 
     sf::Event event;
     while(mainWin.window->isOpen())
@@ -101,7 +104,7 @@ int main()
             {
                 mainWin.newWin(sf::Vector2u(event.size.width, event.size.height));
                 boardView.update();
-                mainMgr.placeButtons();
+                mainMgr.update();
                 optMgr.placeButtons();
                 antClock.restart();
             }
@@ -119,20 +122,20 @@ int main()
             }
         }
 
-        for(sf::Time time = antClock.getElapsedTime(); antMove && time > sf::microseconds(antSpeed); time -= sf::microseconds(antSpeed))
+        for(sf::Time time = antClock.getElapsedTime(); antMove && time > sf::microseconds(1 << (21 - antSpeed)); time -= sf::microseconds(1 << (21 - antSpeed)), mainMgr.setStep(++antStep))
         {
             antClock.restart();
             ant.nextStep();
             boardView.setCol(ant.getPos(), sf::Color::Black);
-            boardView.setCol(sf::Vector2u(boardView.getCenter().x, boardView.getCenter().y), Ant2::colors[board.getCell(sf::Vector2u(boardView.getCenter().x, boardView.getCenter().y))].color);
-            boardView.setCenter(sf::Vector2i(ant.getPos().x, ant.getPos().y));
+            boardView.setCol(ant.getShadow(), Ant2::colors[board.getCell(ant.getShadow())].color);
 
             if(ant.getPos().x < 2)
             {
                 board.addArea(10, Direction2::Left);
                 boardView.addArea(10, Direction2::Left);
+
                 boardView.setViewScl(boardView.getViewScl());
-                boardView.setCenter(sf::Vector2i(boardView.getCenter().x + 10, boardView.getCenter().y));
+
                 ant.setPos(ant.getPos().x + 10, ant.getPos().y);
             }
 
@@ -140,6 +143,7 @@ int main()
             {
                 board.addArea(10, Direction2::Right);
                 boardView.addArea(10, Direction2::Right);
+
                 boardView.setViewScl(boardView.getViewScl());
             }
 
@@ -147,8 +151,9 @@ int main()
             {
                 board.addArea(10, Direction2::Up);
                 boardView.addArea(10, Direction2::Up);
+
                 boardView.setViewScl(boardView.getViewScl());
-                boardView.setCenter(sf::Vector2i(boardView.getCenter().x, boardView.getCenter().y + 10));
+
                 ant.setPos(ant.getPos().x, ant.getPos().y + 10);
             }
 
@@ -156,6 +161,7 @@ int main()
             {
                 board.addArea(10, Direction2::Down);
                 boardView.addArea(10, Direction2::Down);
+
                 boardView.setViewScl(boardView.getViewScl());
             }
         }
@@ -176,26 +182,28 @@ int main()
             board.addArea(21, Direction2::Down);
 
             ant.setPos(10, 10);
+            ant.setShadow(10, 10);
             ant.setDir(Direction2::Up);
 
             boardView.newBoard();
             boardView.addArea(20, Direction2::Right);
             boardView.addArea(20, Direction2::Down);
-            boardView.setCenter(sf::Vector2i(ant.getPos().x, ant.getPos().y));
             boardView.setViewSiz(boardView.getSiz());
-            boardView.setCol((sf::Vector2u)boardView.getCenter(), sf::Color(0, 0, 0));
+            boardView.setCol(ant.getPos(), sf::Color(0, 0, 0));
             break;
         case 30:
             options(optMgr, mainWin, ant);
             boardView.update();
-            mainMgr.placeButtons();
+            mainMgr.update();
             antClock.restart();
             break;
         case 40:
-            boardView.setViewScl(boardView.getViewScl() - 0.05);
+            if(--antSpeed < 1) ++antSpeed;
+            mainMgr.setSpeed(antSpeed);
             break;
         case 50:
-            boardView.setViewScl(boardView.getViewScl() + 0.05);
+            if(++antSpeed > 15) --antSpeed;
+            mainMgr.setSpeed(antSpeed);
             break;
         case 60:
             mainWin.window->close();

@@ -24,6 +24,9 @@ public:
     void setPos(sf::Vector2u _pos);
     void setPos(uint32_t x, uint32_t y);
 
+    void setShadow(sf::Vector2u _pos);
+    void setShadow(uint32_t x, uint32_t y);
+
     void setDir(Direction2 dir);
 
     static std::vector<ruleColor> colors;
@@ -33,12 +36,16 @@ public:
 
     sf::Vector2u        getPos()    {return pos;}
 
+    sf::Vector2u        getShadow() {return shadow;}
+
     Direction2          getDir()    {return direction;}
 
 private:
     Board2 *board;
 
     sf::Vector2u pos;
+
+    sf::Vector2u shadow;
 
     Direction2 direction;
 };
