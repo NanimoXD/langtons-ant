@@ -11,8 +11,8 @@ Board2::Board2():
 Board2::Board2(uint32_t x, uint32_t y):
     area    (sf::Vector2i(0, 0))
 {
-    if(x > 1) addArea(x, Direction2::Right);
-    if(y > 1) addArea(y, Direction2::Down);
+    addArea(x, Direction2::Right);
+    addArea(y, Direction2::Down);
 }
 
 void Board2::addArea(uint32_t exSize, Direction2 dir)

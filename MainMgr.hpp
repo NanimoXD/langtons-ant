@@ -12,9 +12,11 @@ public:
                                                      *  00) Nic
                                                      *  10) Start
                                                      *  11) Stop
-                                                     *  20) Opcje
-                                                     *  30) <
-                                                     *  40) >
+                                                     *  20) Stop
+                                                     *  30) Opcje
+                                                     *  40) <
+                                                     *  50) >
+                                                     *  60) Wyjście
                                                      */
 
     void placeButtons();                            // Ustawia przyciski na właściwym miejscu
@@ -22,7 +24,7 @@ public:
 private:
     sf::RenderWindow *window;                       // Okno :p
 
-    static const char amount = 5;                   // Ilość przycisków
+    static const char amount = 6;                   // Ilość przycisków
 
     static const int width = 200;                   // Szerokość przycisków
     static const int height = 75;                   // Wysokość przycisków

@@ -3,8 +3,6 @@
 BoardView::BoardView():
     window          (nullptr),
     center          (sf::Vector2u(0, 0)),
-    area            (sf::IntRect(0, 0, 1, 1)),
-    viewScl         (1),
     defCol          (sf::Color(223, 223, 223))
 {
     newBoard();
@@ -23,6 +21,9 @@ void BoardView::newBoard()
     cell.create(1, 1, sf::Color(defCol));
     tex.create(1, 1);
     tex.update(cell);
+
+    area = sf::IntRect(0, 0, 1, 1);
+    viewScl = 1;
 }
 
 void BoardView::draw()

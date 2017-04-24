@@ -4,10 +4,11 @@ MainMgr::MainMgr(sf::RenderWindow *_window):
     window      (_window)
 {
     setupButtons();             /*  0) Start / Stop
-                                 *  1) Opcje
-                                 *  2) <
-                                 *  3) >
-                                 *  4) Wyjście
+                                 *  1) Restart
+                                 *  2) Opcje
+                                 *  3) <
+                                 *  4) >
+                                 *  5) Wyjście
                                  */
 }
 
@@ -35,10 +36,11 @@ int MainMgr::main()
 void MainMgr::placeButtons()
 {
     button[0].setPos(window->getSize().x * 0.99 - width, window->getSize().y * 0.02);               // Start / Stop
-    button[1].setPos(window->getSize().x * 0.99 - width, window->getSize().y * (0.17));             // Opcje
-    button[2].setPos(window->getSize().x * 0.99 - width, window->getSize().y * (0.32));             // <
-    button[3].setPos(window->getSize().x * 0.99 - height * 0.75, window->getSize().y * (0.32));     // >
-    button[4].setPos(window->getSize().x * 0.99 - width, window->getSize().y * 0.98 - height);      // Wyjście
+    button[1].setPos(window->getSize().x * 0.99 - width, window->getSize().y * (0.17));             // Restart
+    button[2].setPos(window->getSize().x * 0.99 - width, window->getSize().y * (0.32));             // Opcje
+    button[3].setPos(window->getSize().x * 0.99 - width, window->getSize().y * (0.47));             // <
+    button[4].setPos(window->getSize().x * 0.99 - height * 0.75, window->getSize().y * (0.47));     // >
+    button[5].setPos(window->getSize().x * 0.99 - width, window->getSize().y * 0.98 - height);      // Wyjście
 }
 
 void MainMgr::setupButtons()
@@ -65,17 +67,18 @@ void MainMgr::setupButtons()
     // Tekst przycisków
     button[0].addStr("Start");
     button[0].addStr("Stop");
-    button[1].addStr("Opcje");
-    button[2].addStr("+");
-    button[3].addStr("-");
-    button[4].addStr(L"Wyjście");
+    button[1].addStr("Restart");
+    button[2].addStr("Opcje");
+    button[3].addStr("+");
+    button[4].addStr("-");
+    button[5].addStr(L"Wyjście");
 
-    // Dodatkowe ustawienia 2) "<" i 3) ">"
-    button[2].setSiz(height * 0.75, height * 0.75);
+    // Dodatkowe ustawienia 3) "+" i 4) "-"
     button[3].setSiz(height * 0.75, height * 0.75);
+    button[4].setSiz(height * 0.75, height * 0.75);
 
-    button[2].setTxtMrg(20);
     button[3].setTxtMrg(20);
+    button[4].setTxtMrg(20);
 
     // Pozycjonowanie przycisków
     placeButtons();

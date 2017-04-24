@@ -8,8 +8,10 @@
 
 #include <iostream>
 
-void options(OptMgr &optMgr, MainWin &mainWin)
+void options(OptMgr &optMgr, MainWin &mainWin, Ant2 &ant)
 {
+
+
     while(mainWin.window->isOpen())
     {
         Fps()();
@@ -54,14 +56,24 @@ int main()
 
     Ant2::colors.push_back({sf::Color::White, Direction2::Left});
     Ant2::colors.push_back({sf::Color::Red, Direction2::Right});
+    Ant2::colors.push_back({sf::Color::Green, Direction2::Right});
+    Ant2::colors.push_back({sf::Color::Blue, Direction2::Right});
+    Ant2::colors.push_back({sf::Color::Yellow, Direction2::Right});
+    Ant2::colors.push_back({sf::Color::Magenta, Direction2::Left});
+    Ant2::colors.push_back({sf::Color::Cyan, Direction2::Left});
+    Ant2::colors.push_back({sf::Color(0, 128, 0), Direction2::Left});
+    Ant2::colors.push_back({sf::Color(128, 0, 0), Direction2::Right});
+    Ant2::colors.push_back({sf::Color(255, 0, 255), Direction2::Right});
+    Ant2::colors.push_back({sf::Color(0, 255, 255), Direction2::Right});
+    /*Ant2::colors.push_back({sf::Color(255, 255, 0), Direction2::Right});*/
 
     MainWin mainWin(sf::Vector2u(800, 600));
     MainMgr mainMgr(mainWin.window);
     OptMgr optMgr(mainWin);
 
     BoardView boardView;
-    boardView.addArea(20, Direction2::Right);
-    boardView.addArea(20, Direction2::Down);
+    boardView.addArea(21, Direction2::Right);
+    boardView.addArea(21, Direction2::Down);
     boardView.setCenter(sf::Vector2i(ant.getPos().x, ant.getPos().y));
     boardView.setWin(mainWin.window);
     boardView.setViewSiz(boardView.getSiz());
@@ -69,6 +81,7 @@ int main()
 
     sf::Clock antClock;
     bool antMove = false;
+    int antSpeed = 50;
 
     sf::Event event;
     while(mainWin.window->isOpen())
@@ -90,6 +103,7 @@ int main()
                 boardView.update();
                 mainMgr.placeButtons();
                 optMgr.placeButtons();
+                antClock.restart();
             }
             else if(event.type == sf::Event::Closed)
             {
@@ -101,10 +115,11 @@ int main()
                 {
                     mainWin.window->waitEvent(event);
                 }while(event.type != sf::Event::GainedFocus);
+                antClock.restart();
             }
         }
 
-        for(sf::Time time = antClock.getElapsedTime(); antMove && time > sf::milliseconds(1); time -= sf::milliseconds(1))
+        for(sf::Time time = antClock.getElapsedTime(); antMove && time > sf::microseconds(antSpeed); time -= sf::microseconds(antSpeed))
         {
             antClock.restart();
             ant.nextStep();
@@ -156,18 +171,33 @@ int main()
             antMove = false;
             break;
         case 20:
-            options(optMgr, mainWin);
+            board.clear();
+            board.addArea(21, Direction2::Right);
+            board.addArea(21, Direction2::Down);
+
+            ant.setPos(10, 10);
+            ant.setDir(Direction2::Up);
+
+            boardView.newBoard();
+            boardView.addArea(20, Direction2::Right);
+            boardView.addArea(20, Direction2::Down);
+            boardView.setCenter(sf::Vector2i(ant.getPos().x, ant.getPos().y));
+            boardView.setViewSiz(boardView.getSiz());
+            boardView.setCol((sf::Vector2u)boardView.getCenter(), sf::Color(0, 0, 0));
+            break;
+        case 30:
+            options(optMgr, mainWin, ant);
             boardView.update();
             mainMgr.placeButtons();
             antClock.restart();
             break;
-        case 30:
+        case 40:
             boardView.setViewScl(boardView.getViewScl() - 0.05);
             break;
-        case 40:
+        case 50:
             boardView.setViewScl(boardView.getViewScl() + 0.05);
             break;
-        case 50:
+        case 60:
             mainWin.window->close();
             break;
         }
