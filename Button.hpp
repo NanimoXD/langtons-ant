@@ -85,7 +85,9 @@ public:
 
     sf::Text        getTxt()        {return text;}
 
-    short           getTxtNum()     {return textID;}
+    short           getTxtId()      {return textID;}
+
+    short           getTxtNum()     {return strings.size();}
 
     short           getMrg()        {return marginLeft;}
 

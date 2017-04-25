@@ -37,17 +37,26 @@ public:
 
     void placeButtons();                            // Ustawia przyciski na właściwym miejscu
 
+    void setStrId(uint8_t num, short id);           // Zmienia text przycisku na następny i zwraca jego numer
+
+    // Pobieranie wartości:
+    // ----------------------------------------------
+
+    uint8_t     getAmount()             {return amount;}
+
+    short       getStrId(uint8_t num)   {return num < amount ? button[num].getTxtId() : 0;}
+
 private:
     sf::Event event;                                // Event :D
 
     MainWin mainWin;                                // Okno :p
 
-    static const char amount = 19;                  // Ilość przycisków
+    static const uint8_t amount = 19;               // Ilość przycisków
+
+    Button button[amount];                          // Przyciski ^^
 
     static const int width = 200;                   // Szerokość przycisków
     static const int height = 75;                   // Wysokość przycisków
-
-    Button button[amount];                          // Przyciski ^^
 
     void setupButtons();                            // Wszystkie ustawienia związane z wyglądem przycisków
 };

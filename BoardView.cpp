@@ -77,6 +77,9 @@ void BoardView::addArea(uint16_t extend, Direction2 dir)
         break;
     }
 
+    if(sf::Texture::getMaximumSize() < siz.x || sf::Texture::getMaximumSize() < siz.y)
+        return;
+
     tex.create(siz.x, siz.y);
     background.create(siz.x, siz.y, defCol);
 

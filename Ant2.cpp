@@ -1,6 +1,6 @@
 #include "Ant2.hpp"
 
-std::vector<ruleColor> Ant2::colors;
+std::vector<colorRule> Ant2::colors;
 
 Ant2::Ant2(Board2 &board):
     board       (&board),
@@ -24,15 +24,13 @@ void Ant2::nextStep()
 {
     uint8_t *cell = &board->getCell(pos);
 
-    if(*cell >= colors.size())
-        *cell = 0;
+    checkCell(cell);
 
     rotateDirection2(direction, colors[*cell].direction);
 
     ++*cell;
 
-    if(*cell >= colors.size())
-        *cell = 0;
+    checkCell(cell);
 
     shadow = pos;
 
@@ -80,7 +78,19 @@ void Ant2::setDir(Direction2 dir)
     direction = dir;
 }
 
+void Ant2::checkCell(uint8_t *cell)
+{
+    if(*cell >= colors.size())
+        *cell = 0;
 
+    while(!colors[*cell].active)
+    {
+        ++*cell;
+
+        if(*cell >= colors.size())
+            *cell = 0;
+    }
+}
 
 
 

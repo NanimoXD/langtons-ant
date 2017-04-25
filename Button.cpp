@@ -232,7 +232,7 @@ void Button::clrStr()
 short Button::nxtStr()
 {
     if(strings.empty())
-        return 1;
+        return 0;
 
     strings.push(strings.front());
     strings.pop();

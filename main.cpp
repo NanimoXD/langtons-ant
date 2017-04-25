@@ -8,9 +8,31 @@
 
 #include <iostream>
 
-void options(OptMgr &optMgr, MainWin &mainWin, Ant2 &ant)
+void options(OptMgr &optMgr, MainWin &mainWin)
 {
-
+    for(uint32_t i = 0; i < Ant2::colors.size(); ++i)
+    {
+        if(Ant2::colors[i].active == true)
+        {
+            switch(Ant2::colors[i].direction)
+            {
+            case Direction2::Right:
+                optMgr.setStrId(i + 6, 2);
+                break;
+            case Direction2::Left:
+                optMgr.setStrId(i + 6, 3);
+                break;
+            case Direction2::Up:
+                optMgr.setStrId(i + 6, 4);
+                break;
+            case Direction2::Down:
+                optMgr.setStrId(i + 6, 5);
+                break;
+            }
+        }
+        else
+            optMgr.setStrId(i + 6, 1);
+    }
 
     while(mainWin.window->isOpen())
     {
@@ -34,8 +56,46 @@ void options(OptMgr &optMgr, MainWin &mainWin, Ant2 &ant)
 
             optMgr.placeButtons();
             break;
+        case 30:
+            for(uint32_t i = 6; i < 18; ++i)
+                optMgr.setStrId(i, 1);
+            break;
         case 190:
-            return;
+            {
+                bool ok = false;
+
+                for(uint32_t i = 0; i < Ant2::colors.size(); ++i)
+                {
+                    switch(optMgr.getStrId(i + 6))
+                    {
+                    case 1:
+                        Ant2::colors[i].active = false;
+                        break;
+                    case 2:
+                        ok = true;
+                        Ant2::colors[i].active = true;
+                        Ant2::colors[i].direction = Direction2::Right;
+                        break;
+                    case 3:
+                        ok = true;
+                        Ant2::colors[i].active = true;
+                        Ant2::colors[i].direction = Direction2::Left;
+                        break;
+                    case 4:
+                        ok = true;
+                        Ant2::colors[i].active = true;
+                        Ant2::colors[i].direction = Direction2::Up;
+                        break;
+                    case 5:
+                        ok = true;
+                        Ant2::colors[i].active = true;
+                        Ant2::colors[i].direction = Direction2::Down;
+                        break;
+                    }
+                }
+                if(ok) return;
+                else break;
+            }
         }
 
         mainWin.window->display();
@@ -54,18 +114,19 @@ int main()
 
     Ant2 ant(board, 10, 10);
 
-    Ant2::colors.push_back({sf::Color::White, Direction2::Left});
-    Ant2::colors.push_back({sf::Color::Red, Direction2::Right});
-    Ant2::colors.push_back({sf::Color::Green, Direction2::Right});
-    Ant2::colors.push_back({sf::Color::Blue, Direction2::Right});
-    Ant2::colors.push_back({sf::Color::Yellow, Direction2::Right});
-    Ant2::colors.push_back({sf::Color::Magenta, Direction2::Left});
-    Ant2::colors.push_back({sf::Color::Cyan, Direction2::Left});
-    Ant2::colors.push_back({sf::Color(0, 128, 0), Direction2::Left});
-    Ant2::colors.push_back({sf::Color(128, 0, 0), Direction2::Right});
-    Ant2::colors.push_back({sf::Color(255, 0, 255), Direction2::Right});
-    Ant2::colors.push_back({sf::Color(0, 255, 255), Direction2::Right});
-    /*Ant2::colors.push_back({sf::Color(255, 255, 0), Direction2::Right});*/
+    Ant2::colors.push_back({sf::Color(255, 32, 32), Direction2::Left, true});
+    Ant2::colors.push_back({sf::Color(255, 255, 32), Direction2::Right, true});
+    Ant2::colors.push_back({sf::Color(32, 255, 32), Direction2::Right, false});
+    Ant2::colors.push_back({sf::Color(32, 255, 255), Direction2::Right, false});
+    Ant2::colors.push_back({sf::Color(32, 32, 255), Direction2::Right, false});
+    Ant2::colors.push_back({sf::Color(255, 32, 255), Direction2::Right, false});
+
+    Ant2::colors.push_back({sf::Color(255, 140, 32), Direction2::Right, false});
+    Ant2::colors.push_back({sf::Color(140, 255, 32), Direction2::Right, false});
+    Ant2::colors.push_back({sf::Color(32, 255, 140), Direction2::Right, false});
+    Ant2::colors.push_back({sf::Color(32, 140, 255), Direction2::Right, false});
+    Ant2::colors.push_back({sf::Color(140, 32, 255), Direction2::Right, false});
+    Ant2::colors.push_back({sf::Color(255, 32, 140), Direction2::Right, false});
 
     MainWin mainWin(sf::Vector2u(800, 600));
     MainMgr mainMgr(mainWin.window);
@@ -75,6 +136,7 @@ int main()
     boardView.addArea(21, Direction2::Right);
     boardView.addArea(21, Direction2::Down);
     boardView.setWin(mainWin.window);
+    boardView.setCenter(sf::Vector2i(ant.getPos().x, ant.getPos().y));
     boardView.setViewSiz(boardView.getSiz());
     boardView.setCol(ant.getPos(), sf::Color(0, 0, 0));
 
@@ -122,10 +184,11 @@ int main()
             }
         }
 
-        for(sf::Time time = antClock.getElapsedTime(); antMove && time > sf::microseconds(1 << (21 - antSpeed)); time -= sf::microseconds(1 << (21 - antSpeed)), mainMgr.setStep(++antStep))
+        for(sf::Time time = antClock.getElapsedTime() > sf::seconds(2) ? sf::seconds(2) : antClock.getElapsedTime(); antMove && time > sf::microseconds(1 << (21 - antSpeed)); time -= sf::microseconds(1 << (21 - antSpeed)), mainMgr.setStep(++antStep))
         {
             antClock.restart();
             ant.nextStep();
+            boardView.setCenter(sf::Vector2i(ant.getPos().x, ant.getPos().y));
             boardView.setCol(ant.getPos(), sf::Color::Black);
             boardView.setCol(ant.getShadow(), Ant2::colors[board.getCell(ant.getShadow())].color);
 
@@ -189,10 +252,11 @@ int main()
             boardView.addArea(20, Direction2::Right);
             boardView.addArea(20, Direction2::Down);
             boardView.setViewSiz(boardView.getSiz());
+            boardView.setCenter(sf::Vector2i(ant.getPos().x, ant.getPos().y));
             boardView.setCol(ant.getPos(), sf::Color(0, 0, 0));
             break;
         case 30:
-            options(optMgr, mainWin, ant);
+            options(optMgr, mainWin);
             boardView.update();
             mainMgr.update();
             antClock.restart();
@@ -202,14 +266,13 @@ int main()
             mainMgr.setSpeed(antSpeed);
             break;
         case 50:
-            if(++antSpeed > 15) --antSpeed;
+            if(++antSpeed > 16) --antSpeed;
             mainMgr.setSpeed(antSpeed);
             break;
         case 60:
             mainWin.window->close();
             break;
         }
-
 
         boardView.draw();
 

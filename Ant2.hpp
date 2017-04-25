@@ -6,10 +6,11 @@
 
 #include <SFML/Graphics.hpp>
 
-struct ruleColor
+struct colorRule
 {
     sf::Color color;
     Direction2 direction;
+    bool active;
 };
 
 class Ant2
@@ -29,7 +30,7 @@ public:
 
     void setDir(Direction2 dir);
 
-    static std::vector<ruleColor> colors;
+    static std::vector<colorRule> colors;
 
     // Pobieranie wartości:
     // -----------------------------------
@@ -48,6 +49,8 @@ private:
     sf::Vector2u shadow;
 
     Direction2 direction;
+
+    void checkCell(uint8_t *id);
 };
 
 #endif // Ant2_hpp
