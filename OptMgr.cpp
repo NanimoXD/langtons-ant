@@ -57,7 +57,7 @@ MgrRet OptMgr::main()
 
     for(int i = 0; i < amount; ++i)     // Przyciski od 1 do 19
     {
-        if(i == 1 || i == 3 || i == 4 || i == 5)
+        if(i == 1 || i == 3 || i == 5)
             continue;
 
         if(button[i].button())
@@ -122,6 +122,7 @@ void OptMgr::setupButtons()
     // Tekst przycisków
     button[0].addStr(L"Pełny ekran");
     button[2].addStr("Reset");
+    button[4].addStr("Zapisz");
 
     button[6].addStr("Brak");
     button[6].addStr("Prawo");

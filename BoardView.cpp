@@ -159,6 +159,21 @@ void BoardView::setDefCol(sf::Color col)
     defCol = col;
 }
 
+bool BoardView::saveTex(std::string name)
+{
+    std::fstream file;
+    file.open(name.c_str(), std::ios::in);
+
+    if(file.good())
+    {
+        file.close();
+        return false;
+    }
+
+    sf::Image img = tex.copyToImage();
+    return img.saveToFile(name);
+}
+
 void BoardView::setWin(sf::RenderWindow *win)
 {
     window = win;

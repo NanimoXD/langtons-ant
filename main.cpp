@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-void options(OptMgr &optMgr, MainWin &mainWin)
+void options(OptMgr &optMgr, MainWin &mainWin, BoardView *boardView)
 {
     for(uint32_t i = 0; i < Ant2::colors.size(); ++i)
     {
@@ -60,6 +60,18 @@ void options(OptMgr &optMgr, MainWin &mainWin)
             for(uint32_t i = 6; i < 18; ++i)
                 optMgr.setStrId(i, 1);
             break;
+        case 50:
+            {
+                std::ostringstream ostr;
+                int i = 0;
+
+                do
+                {
+                    ostr.str("");
+                    ostr << i++;
+                }while(!boardView->saveTex("Ant art - " + ostr.str() + ".png"));
+                break;
+            }
         case 190:
             {
                 bool ok = false;
@@ -256,7 +268,7 @@ int main()
             boardView.setCol(ant.getPos(), sf::Color(0, 0, 0));
             break;
         case 30:
-            options(optMgr, mainWin);
+            options(optMgr, mainWin, &boardView);
             boardView.update();
             mainMgr.update();
             antClock.restart();

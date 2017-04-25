@@ -1,9 +1,10 @@
 #ifndef BoardView_hpp
 #define BoardView_hpp
 
-#include <SFML/Graphics.hpp>
-
 #include "Direction2.hpp"
+
+#include <SFML/Graphics.hpp>
+#include <fstream>
 
 class BoardView
 {
@@ -28,6 +29,8 @@ public:
     void setViewScl(float scl);                         // Ustawia skale przybliżenia
 
     void setDefCol(sf::Color col);                      // Zmienia domyślny kolor nowych pól
+
+    bool saveTex(std::string name);                     // Zapisuje plansze, zwraca fałsz gdy plik już istnieje lub coś poszło nie tak
 
     void setWin(sf::RenderWindow *win);                 // Ustawia okno
 
